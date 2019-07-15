@@ -1,11 +1,42 @@
 <template>
   <div>
-    <div class="app">
-
+    <div class="First">
+      <div class="app1">
+        <select name="" id="">
+          <option value="">成都市</option>
+        </select>
+      </div>
+      <div class="app2">
+        <van-search
+          v-model="value"
+          placeholder="请输入搜索关键词"
+          show-action
+          @search="onSearch"
+        >
+          <div slot="action" @click="onSearch" class="first__search">搜索</div>
+        </van-search>
+      </div>
     </div>
-    <div class="app2">
-
+    <div v-if="HomeData.advertesPicture">
+      <van-swipe :autoplay="2000" indicator-color="white">
+        <van-swipe-item v-for="(item, index) in HomeData.slides" :key="index"
+          ><img :src="item.image" alt="" class="Rotary_Planting_Map"
+        /></van-swipe-item>
+      </van-swipe>
+      <div class="Home__category">
+        <div v-for="(item,index) in HomeData.category" :key="index" class="category__item">
+          <img :src="item.image" alt="" class="category__img">
+          <div>{{item.mallCategoryName}}</div>
+        </div>
+      </div>
+      <img
+        :src="HomeData.advertesPicture.PICTURE_ADDRESS"
+        alt=""
+        class="imgtu"
+      />
     </div>
+      <div class="recomend">商品推荐</div>
+
   </div>
 </template>
 
@@ -15,10 +46,30 @@ export default {
   components: {},
   props: {},
   data() {
-    return {};
+    return {
+      value: "",
+      HomeData: {}
+    };
   },
-  methods: {},
-  mounted() {},
+  methods: {
+    onSearch() {},
+    getrecommend() {
+      this.$axios
+        .req("api//recommend")
+        .then(response => {
+          if (response) {
+            this.HomeData = response.data;
+            console.log(this.HomeData);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  },
+  mounted() {
+    this.getrecommend();
+  },
   created() {},
   filters: {},
   computed: {},
@@ -28,16 +79,47 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .app {
-    width: 300px;
-    height: 300px;
-    background-color: #7dd2d9;
-    margin: 20px auto;
+.First {
+  height: 50px;
+  display: flex;
+  margin-top: 10px;
+  margin-left: 20px;
+  align-items: center;
+}
+.app2 {
+  width: 100%;
+  margin-left: 20px;
+}
+.first__search {
+  font-size: 25px;
+}
+.imgtu {
+  width: 100%;
+  height: 100px;
+}
+.Rotary_Planting_Map {
+  display: flex;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+  height: 400px;
+}
+  .category__img {
+    width: 100px;
+    height: 80px;
   }
-  .app2 {
-    width: 300px;
-    height: 300px;
-    background-color: #ce272d;
-    margin: 20px auto;
+  .Home__category {
+    display: flex;
+    width: 100%;
+    text-align: center;
+  }
+  .category__item {
+  flex: 1;
+  }
+  .recomend {
+    font-size: 30px;
+  }
+  .recomend {
+    margin-left: 20px;
   }
 </style>
