@@ -1,46 +1,138 @@
 <template>
-  <div>
-    <div class="First">
-      <div class="app1">
-        <select name="" id="">
-          <option value="">成都市</option>
-        </select>
-      </div>
-      <div class="app2">
-        <van-search
-          v-model="value"
-          placeholder="请输入搜索关键词"
-          show-action
-          @search="onSearch"
-        >
-          <div slot="action" @click="onSearch" class="first__search">搜索</div>
-        </van-search>
-      </div>
-    </div>
-    <div v-if="HomeData.advertesPicture">
-      <van-swipe :autoplay="2000" indicator-color="white">
-        <van-swipe-item v-for="(item, index) in HomeData.slides" :key="index"
-          ><img :src="item.image" alt="" class="Rotary_Planting_Map"
-        /></van-swipe-item>
-      </van-swipe>
-      <div class="Home__category">
-        <div v-for="(item,index) in HomeData.category" :key="index" class="category__item">
-          <img :src="item.image" alt="" class="category__img">
-          <div>{{item.mallCategoryName}}</div>
+  <div class="home__body" ref="personWrap2">
+    <div>
+      <div class="First">
+        <div class="app1">
+          <select name="" id="">
+            <option value="">成都市</option>
+          </select>
+        </div>
+        <div class="app2">
+          <van-search
+                  v-model="value"
+                  placeholder="请输入搜索关键词"
+                  show-action
+                  @search="onSearch"
+          >
+            <div slot="action" @click="onSearch" class="first__search">搜索</div>
+          </van-search>
         </div>
       </div>
-      <img
-        :src="HomeData.advertesPicture.PICTURE_ADDRESS"
-        alt=""
-        class="imgtu"
-      />
-    </div>
+      <div v-if="HomeData.advertesPicture">
+        <van-swipe :autoplay="2000" indicator-color="white">
+          <van-swipe-item v-for="(item, index) in HomeData.slides" :key="index"
+          ><img :src="item.image" alt="" class="Rotary_Planting_Map"
+          /></van-swipe-item>
+        </van-swipe>
+        <div class="Home__category">
+          <div
+                  v-for="(item, index) in HomeData.category"
+                  :key="index"
+                  class="category__item"
+          >
+            <img :src="item.image" alt="" class="category__img" />
+            <div>{{ item.mallCategoryName }}</div>
+          </div>
+        </div>
+        <img
+                :src="HomeData.advertesPicture.PICTURE_ADDRESS"
+                alt=""
+                class="imgtu"
+        />
+      </div>
       <div class="recomend">商品推荐</div>
-
+      <div ref="personWrap" class="recommend__wrap">
+        <div class="recommend__shop">
+          <div
+                  v-for="(item, index) in HomeData.recommend"
+                  :key="index"
+                  class="recommend__item"
+          >
+            <img :src="item.image" alt="" class="recommend__img" />
+            <div class="recommend__goodsname">{{ item.goodsName }}</div>
+            <div>
+              <span class="recommend__price">{{ item.price }}</span>
+              <span class="recomend__mallPrice">{{ item.mallPrice }}</span>
+            </div>
+            <div class="recomend__footer">
+              <span class="recommend__cart"><van-icon name="cart"/></span>
+              <span class="recommend__check">查看详情</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="snacks" v-if="HomeData.floorName">
+        <span class="snacks__1F">1F</span>
+        <span class="snacks__content">{{ HomeData.floorName.floor1 }}</span>
+      </div>
+      <div class="snacks2">
+        <div v-if="HomeData.floor1" class="snacks2__1">
+          <img :src="HomeData.floor1[0].image" alt="" class="snacks2__0__img" />
+          <div>
+            <img :src="HomeData.floor1[1].image" alt="" class="snacks2__1__img" />
+            <img :src="HomeData.floor1[2].image" alt="" class="snacks2__1__img" />
+          </div>
+        </div>
+        <div v-if="HomeData.floor1" class="snacks2__1">
+          <img :src="HomeData.floor1[3].image" alt="" class="snacks2__2__img" />
+          <img :src="HomeData.floor1[4].image" alt="" class="snacks2__2__img" />
+        </div>
+      </div>
+      <div class="snacks" v-if="HomeData.floorName">
+        <span class="snacks__1F">2F</span>
+        <span class="snacks__content">{{ HomeData.floorName.floor2 }}</span>
+      </div>
+      <div class="snacks2">
+        <div v-if="HomeData.floor2" class="snacks2__1">
+          <img :src="HomeData.floor2[0].image" alt="" class="snacks2__0__img" />
+          <div>
+            <img :src="HomeData.floor2[1].image" alt="" class="snacks2__1__img" />
+            <img :src="HomeData.floor2[2].image" alt="" class="snacks2__1__img" />
+          </div>
+        </div>
+        <div v-if="HomeData.floor2" class="snacks2__1">
+          <img :src="HomeData.floor2[3].image" alt="" class="snacks2__2__img" />
+          <img :src="HomeData.floor2[4].image" alt="" class="snacks2__2__img" />
+        </div>
+      </div>
+      <div class="snacks" v-if="HomeData.floorName">
+        <span class="snacks__1F">3F</span>
+        <span class="snacks__content">{{ HomeData.floorName.floor3 }}</span>
+      </div>
+      <div class="snacks2">
+        <div v-if="HomeData.floor3" class="snacks2__1">
+          <img :src="HomeData.floor3[0].image" alt="" class="snacks2__0__img" />
+          <div>
+            <img :src="HomeData.floor3[1].image" alt="" class="snacks2__1__img" />
+            <img :src="HomeData.floor3[2].image" alt="" class="snacks2__1__img" />
+          </div>
+        </div>
+        <div v-if="HomeData.floor3" class="snacks2__1">
+          <img :src="HomeData.floor3[3].image" alt="" class="snacks2__2__img" />
+          <img :src="HomeData.floor3[4].image" alt="" class="snacks2__2__img" />
+        </div>
+      </div>
+      <div class="snacks">
+        <span class="snacks__content">热销商品</span>
+          <div class="hot__shop">
+            <div v-for="(item, index) in HomeData.hotGoods" :key="index" class="hot__item">
+              <img :src="item.image" alt="" class="hot__img" />
+              <div class="hot__footer">
+                <div class="hot__goodsname">{{ item.name }}</div>
+                <div>
+                  <span class="hot__price">￥{{ item.price }}</span>
+                  <span class="hot__mallPrice">￥{{ item.mallPrice }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import BScroll from "better-scroll";
 export default {
   name: "Home",
   components: {},
@@ -65,20 +157,56 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    personScoll() {
+      this.$nextTick(() => {
+        if (!this.scroll) {
+          this.scroll = new BScroll(this.$refs.personWrap, {
+            startX: 0,
+            click: true,
+            scrollX: true,
+            // 忽略竖直方向的滚动
+            scrollY: false,
+            eventPassthrough: "vertical"
+          });
+        } else {
+          this.scroll.refresh();
+        }
+      });
+    },
+    personScol2() {
+      this.$nextTick(() => {
+        if (!this.scroll1) {
+          this.scroll1 = new BScroll(this.$refs.personWrap2, {
+            click: true
+          });
+        } else {
+          this.scroll1.refresh();
+        }
+      });
     }
   },
   mounted() {
     this.getrecommend();
   },
-  created() {},
+  created() {
+    this.$nextTick(() => {
+      this.personScoll();
+      this.personScol2();
+    });
+  },
   filters: {},
   computed: {},
   watch: {},
   directives: {}
 };
 </script>
-
 <style scoped lang="scss">
+.home__body {
+  background-color: #d8d8d8;
+  height: 100vh;
+  overflow: hidden;
+}
 .First {
   height: 50px;
   display: flex;
@@ -100,26 +228,152 @@ export default {
 .Rotary_Planting_Map {
   display: flex;
   overflow: hidden;
-  display: inline-block;
   width: 100%;
   height: 400px;
 }
-  .category__img {
-    width: 100px;
-    height: 80px;
-  }
-  .Home__category {
-    display: flex;
-    width: 100%;
-    text-align: center;
-  }
-  .category__item {
+.category__img {
+  width: 100px;
+  height: 80px;
+}
+.Home__category {
+  display: flex;
+  width: 100%;
+  text-align: center;
+}
+.category__item {
   flex: 1;
-  }
-  .recomend {
-    font-size: 30px;
-  }
-  .recomend {
-    margin-left: 20px;
-  }
+}
+.recomend {
+  font-size: 30px;
+  margin-left: 20px;
+}
+.recommend__item {
+  margin-left: 10px;
+}
+.recommend__wrap {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+}
+.recommend__shop {
+  display: flex;
+}
+.recommend__img {
+  height: 240px;
+}
+.recommend__goodsname {
+  width: 240px;
+  overflow: hidden;
+  word-break: keep-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 25px;
+}
+.recommend__price {
+  font-size: 30px;
+}
+.recomend__mallPrice {
+  margin-left: 20px;
+  font-size: 25px;
+  text-decoration: line-through;
+}
+.recomend__footer {
+  margin-left: 10px;
+}
+.recommend__cart {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 30px;
+  background-color: orangered;
+  color: white;
+}
+.recommend__check {
+  display: inline-block;
+  width: 180px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 30px;
+  background-color: orange;
+  color: white;
+}
+.snacks {
+  width: 100%;
+  text-align: center;
+}
+.snacks__1F {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+}
+.snacks__content {
+  display: inline-block;
+  height: 50px;
+  line-height: 50px;
+  font-size: 30px;
+  color: orangered;
+}
+.snacks2 {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.snacks2__1 {
+  display: flex;
+}
+.snacks2__0__img {
+  height: 400px;
+  width: 50%;
+}
+.snacks2__1__img {
+  height: 200px;
+  width: 100%;
+  display: block;
+}
+.snacks2__2__img {
+  width: 50%;
+  height: 200px;
+}
+.hot__shop {
+  display: flex;
+  flex-wrap: wrap;
+}
+.hot__item {
+  width: 49vw;
+  margin-left: 5px;
+  margin-top: 5px;
+}
+.hot__img {
+  height: 370px;
+}
+.hot__goodsname {
+  width: 370px;
+  overflow: hidden;
+  word-break: keep-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 30px;
+  color: red;
+}
+.hot__footer {
+  margin-top: -6px;
+  background-color: white;
+}
+.hot__price {
+  color: red;
+  font-size: 30px;
+}
+.hot__mallPrice {
+  margin-left: 20px;
+  font-size: 25px;
+  text-decoration: line-through;
+}
 </style>
