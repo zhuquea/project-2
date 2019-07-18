@@ -2,25 +2,41 @@
   <div class="Footer__body">
     <van-row type="flex" justify="space-around" class="footer__obj">
       <van-col span="4" align="center">
-        <div class="footer__item" :class="{ footer__item2: tabnum === 0 }" @click="switchclass0">
+        <div
+          class="footer__item"
+          :class="{ footer__item2: tabnum === 0 }"
+          @click="switchclass0"
+        >
           <van-icon :name="footerdata[0].name" size="25px" />
           <div>{{ footerdata[0].content }}</div>
         </div>
       </van-col>
       <van-col span="4" align="center">
-        <div class="footer__item" :class="{ footer__item2: tabnum === 1 }" @click="switchclass1">
+        <div
+          class="footer__item"
+          :class="{ footer__item2: tabnum === 1 }"
+          @click="switchclass1"
+        >
           <van-icon :name="footerdata[1].name" size="25px" />
           <div>{{ footerdata[1].content }}</div>
         </div>
       </van-col>
       <van-col span="4" align="center">
-        <div class="footer__item" :class="{ footer__item2: tabnum === 2 }" @click="switchclass2">
+        <div
+          class="footer__item"
+          :class="{ footer__item2: tabnum === 2 }"
+          @click="switchclass2"
+        >
           <van-icon :name="footerdata[2].name" size="25px" />
           <div>{{ footerdata[2].content }}</div>
         </div>
       </van-col>
       <van-col span="4" align="center">
-        <div class="footer__item" :class="{ footer__item2: tabnum === 3 }" @click="switchclass3">
+        <div
+          class="footer__item"
+          :class="{ footer__item2: tabnum === 3 }"
+          @click="switchclass3"
+        >
           <van-icon :name="footerdata[3].name" size="25px" />
           <div>{{ footerdata[3].content }}</div>
         </div>
@@ -33,7 +49,11 @@
 export default {
   name: "Footer",
   components: {},
-  props: {},
+  props: {
+    tabnum1: {
+      type: Number
+    }
+  },
   data() {
     return {
       footerdata: [
@@ -59,25 +79,34 @@ export default {
   },
   methods: {
     switchclass0() {
-       this.tabnum = 0
-      this.$router.push({name: "home"})
+      this.tabnum = 0;
+      this.$router.push({ name: "home" });
     },
-    switchclass1 () {
-      this.tabnum = 1
+    switchclass1() {
+      this.tabnum = 1;
+      this.$router.push({
+        name: "classification",
+        query: { categroy: this.$store.state.category }
+      });
     },
     switchclass2() {
-      this.tabnum = 2
+      this.tabnum = 2;
     },
-    switchclass3 () {
-      this.tabnum = 3
-      this.$router.push({name: "membership"})
+    switchclass3() {
+      this.tabnum = 3;
+      this.$router.push({ name: "membership" });
     }
   },
   mounted() {},
   created() {},
   filters: {},
   computed: {},
-  watch: {},
+  watch: {
+    tabnum1(val) {
+      console.log(val);
+      this.tabnum = 1;
+    }
+  },
   directives: {}
 };
 </script>

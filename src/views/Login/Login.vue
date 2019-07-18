@@ -7,17 +7,25 @@
           v-model="username"
           :clearable="clearstr"
           placeholder="USERNAME"
-          size="large"></van-field>
+          size="large"
+        ></van-field>
       </div>
       <div class="password">
         <van-field
           v-model="password"
           :clearable="clearstr"
           type="password"
-          placeholder="PASSWORD"></van-field>
+          placeholder="PASSWORD"
+        ></van-field>
       </div>
       <div>
-        <van-field v-model="phone" label="手机号码" placeholder="仅注册需要" size="large" label-width="80px" center/>
+        <van-field
+          v-model="phone"
+          label="手机号码"
+          placeholder="仅注册需要"
+          size="large"
+          label-width="80px"
+          center></van-field>
       </div>
       <div>
         <van-field
@@ -45,18 +53,30 @@
           style="width: 230px"
         >
         </van-field>
-          <span v-html="src" class="span__code" @click="getcode1"></span>
+        <span v-html="src" class="span__code" @click="getcode1"></span>
       </div>
       <div class="login__register">
-        <van-button type="primary" size="large" class="login__L__R" @click="login">登录</van-button>
-        <van-button type="info" size="large" class="login__L__R" @click="register">注册</van-button>
+        <van-button
+          type="primary"
+          size="large"
+          class="login__L__R"
+          @click="login"
+          >登录</van-button
+        >
+        <van-button
+          type="info"
+          size="large"
+          class="login__L__R"
+          @click="register"
+          >注册</van-button
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
-    import _ from "lodash"
+import _ from "lodash";
 export default {
   name: "Login",
   components: {},
@@ -78,40 +98,85 @@ export default {
         .req("api/verify")
         .then(response => {
           if (response) {
-              this.src = response
+            this.src = response;
           }
         })
         .catch(err => {
           console.log(err);
         });
     },
-    login () {
-      this.$axios.req("api/login",{
-        nickname: this.username,
-        password: this.password,
-        verify: this.verifictioncode
-      }).then((response) => {
-        if (response) {
-          console.log(response);
-        }
-        if (response.code === -1) {
-          this.$notify('请输入完整信息或者用户名错误');
-        } else if (response.code === -2) {
-          this.$notify('验证码错误')
-        }
-      }).catch((err) => {
-        console.log(err);
-      })
+    login() {
+      this.$axios
+        .req("api/login", {
+          nickname: this.username,
+          password: this.password,
+          verify: this.verifictioncode
+        })
+        .then(response => {
+          if (response) {
+            console.log(response);
+          }
+          if (response.code === -1) {
+            this.$notify("请输入完整信息或者用户名错误");
+          } else if (response.code === -2) {
+            this.$notify("验证码错误");
+            this.getcode();
+          } else if (response.code === 200) {
+            this.$notify({
+              message: "恭喜你，登录成功",
+              duration: 3000,
+              background: "#1989fa"
+            });
+            localStorage.setItem("user", JSON.stringify(response.userInfo));
+            this.$store.state.user = response.userInfo;
+            this.$router.push({ name: "home" });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
-    register () {
-
+    register() {
+      this.$axios
+        .req("api/register", {
+          nickname: this.username,
+          password: this.password,
+          verify: this.verifictioncode
+        })
+        .then(response => {
+          if (response) {
+            console.log(response);
+          }
+          if (response.code === -1) {
+            this.$notify("请输入完整信息或用户名已存在");
+          } else if (response.code === -2) {
+            this.$notify({
+              message: "验证码错误",
+              duration: 3000,
+              background: "orange"
+            });
+            this.getcode();
+          } else if (response.code === 200) {
+            this.$notify({
+              message: "恭喜你，注册成功",
+              duration: 3000,
+              background: "#1989fa"
+            });
+            localStorage.setItem("user", JSON.stringify(response.userInfo));
+            this.$store.state.user1 = response.userInfo;
+            this.$router.push({ name: "home" });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   mounted() {
     this.getcode();
   },
   created() {
-      this.getcode1 = _.debounce(this.getcode,350)
+    this.getcode1 = _.debounce(this.getcode, 350);
   },
   filters: {},
   computed: {},
@@ -154,20 +219,16 @@ export default {
 .password {
   margin-top: 20px;
 }
-    .login__code {
-        position: relative;
-    }
-    .span__code {
-        position: absolute;
-        top: 0;
-        right: 6px;
-    }
-  .login__register {
-    display: flex;
-  }
-  .login__L__R {
-    width: 30%;
-    height: 70px;
-    margin-left: 20px;
-  }
+.login__code {
+  display: flex;
+  align-items: center;
+}
+.login__register {
+  display: flex;
+}
+.login__L__R {
+  width: 30%;
+  height: 70px;
+  margin-left: 20px;
+}
 </style>

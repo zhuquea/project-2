@@ -1,3 +1,5 @@
 export default {
-  user: ""
+  user: "",
+  user1: "",
+  category: [],
 };

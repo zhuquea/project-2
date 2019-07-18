@@ -43,6 +43,24 @@ const router = new Router({
         title: "登录/注册",
         showFooter: false
       }
+    },
+    {
+      path: "/classification",
+      name: "classification",
+      component: () => import("../views/Classification.vue"),
+      meta: {
+        title: "商品分类",
+        showFooter: true
+      }
+    },
+    {
+      path: "/details",
+      name: "details",
+      component: () => import("../views/details/Details.vue"),
+      meta: {
+        title: "商品详情",
+        showFooter: false
+      }
     }
   ]
 });

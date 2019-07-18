@@ -9,7 +9,7 @@
         <van-icon name="manager" size="50px" color="orange" />
       </div>
       <div class="second__user">
-        欢迎您：
+        欢迎您：{{userInfo.nickname}}
       </div>
       <div class="second__out">
         退出登录
@@ -24,10 +24,15 @@ export default {
   components: {},
   props: {},
   data() {
-    return {};
+    return {
+      userInfo: {}
+    };
   },
   methods: {},
-  mounted() {},
+  mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('user'))
+    console.log(this.userInfo);
+  },
   created() {},
   filters: {},
   computed: {},
@@ -67,7 +72,7 @@ export default {
   transform: translate(-60px);
 }
 .second__user {
-  width: 200px;
+  width: 100vw;
   text-align: center;
   font-size: 40px;
   font-weight: bold;
@@ -75,7 +80,7 @@ export default {
   position: absolute;
   top: 220px;
   left: 50%;
-  transform: translate(-100px);
+  transform: translate(-50vw);
 }
 .second__out {
   width: 200px;

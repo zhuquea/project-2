@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view />
-    <Footer v-if="$route.meta.showFooter"></Footer>
+    <Footer v-if="$route.meta.showFooter" :tabnum1="tabnum1"></Footer>
   </div>
 </template>
 <script>
@@ -12,7 +12,17 @@ export default {
     Footer
   },
   data() {
-    return {};
+    return {
+      tabnum1: 0
+    };
+  },
+  watch: {
+    $route (to) {
+      console.log(to)
+      if (to.path === "/classification") {
+        this.tabnum1 = Math.random()
+      }
+    }
   }
 };
 </script>
