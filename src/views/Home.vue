@@ -70,23 +70,25 @@
       </div>
       <div class="snacks2">
         <div v-if="HomeData.floor1" class="snacks2__1">
-          <img :src="HomeData.floor1[0].image" alt="" class="snacks2__0__img" />
+          <img :src="HomeData.floor1[0].image" alt="" class="snacks2__0__img" @click="jump__details0(HomeData.floor1[0].goodsId)"/>
           <div>
             <img
               :src="HomeData.floor1[1].image"
               alt=""
               class="snacks2__1__img"
+              @click="jump__details0(HomeData.floor1[1].goodsId)"
             />
             <img
               :src="HomeData.floor1[2].image"
               alt=""
               class="snacks2__1__img"
+              @click="jump__details0(HomeData.floor1[2].goodsId)"
             />
           </div>
         </div>
         <div v-if="HomeData.floor1" class="snacks2__1">
-          <img :src="HomeData.floor1[3].image" alt="" class="snacks2__2__img" />
-          <img :src="HomeData.floor1[4].image" alt="" class="snacks2__2__img" />
+          <img :src="HomeData.floor1[3].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor1[3].goodsId)"/>
+          <img :src="HomeData.floor1[4].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor1[4].goodsId)"/>
         </div>
       </div>
       <div class="snacks" v-if="HomeData.floorName">
@@ -95,23 +97,25 @@
       </div>
       <div class="snacks2">
         <div v-if="HomeData.floor2" class="snacks2__1">
-          <img :src="HomeData.floor2[0].image" alt="" class="snacks2__0__img" />
+          <img :src="HomeData.floor2[0].image" alt="" class="snacks2__0__img" @click="jump__details0(HomeData.floor2[0].goodsId)"/>
           <div>
             <img
               :src="HomeData.floor2[1].image"
               alt=""
               class="snacks2__1__img"
+              @click="jump__details0(HomeData.floor2[1].goodsId)"
             />
             <img
               :src="HomeData.floor2[2].image"
               alt=""
               class="snacks2__1__img"
+              @click="jump__details0(HomeData.floor2[2].goodsId)"
             />
           </div>
         </div>
         <div v-if="HomeData.floor2" class="snacks2__1">
-          <img :src="HomeData.floor2[3].image" alt="" class="snacks2__2__img" />
-          <img :src="HomeData.floor2[4].image" alt="" class="snacks2__2__img" />
+          <img :src="HomeData.floor2[3].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor2[3].goodsId)"/>
+          <img :src="HomeData.floor2[4].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor2[4].goodsId)"/>
         </div>
       </div>
       <div class="snacks" v-if="HomeData.floorName">
@@ -120,23 +124,25 @@
       </div>
       <div class="snacks2">
         <div v-if="HomeData.floor3" class="snacks2__1">
-          <img :src="HomeData.floor3[0].image" alt="" class="snacks2__0__img" />
+          <img :src="HomeData.floor3[0].image" alt="" class="snacks2__0__img" @click="jump__details0(HomeData.floor3[0].goodsId)"/>
           <div>
             <img
               :src="HomeData.floor3[1].image"
               alt=""
               class="snacks2__1__img"
+              @click="jump__details0(HomeData.floor3[1].goodsId)"
             />
             <img
               :src="HomeData.floor3[2].image"
               alt=""
               class="snacks2__1__img"
+              @click="jump__details0(HomeData.floor3[2].goodsId)"
             />
           </div>
         </div>
         <div v-if="HomeData.floor3" class="snacks2__1">
-          <img :src="HomeData.floor3[3].image" alt="" class="snacks2__2__img" />
-          <img :src="HomeData.floor3[4].image" alt="" class="snacks2__2__img" />
+          <img :src="HomeData.floor3[3].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor3[3].goodsId)"/>
+          <img :src="HomeData.floor3[4].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor3[4].goodsId)"/>
         </div>
       </div>
       <div class="snacks">
@@ -147,7 +153,7 @@
             :key="index"
             class="hot__item"
           >
-            <img :src="item.image" alt="" class="hot__img" />
+            <img :src="item.image" alt="" class="hot__img" @click="jump__details(item)"/>
             <div class="hot__footer">
               <div class="hot__goodsname">{{ item.name }}</div>
               <div>
@@ -231,7 +237,13 @@ export default {
         name: "details",
         query: {id: item.goodsId}
       })
-    }
+    },
+    jump__details0 (id) {
+      this.$router.push({
+        name: "details",
+        query: {id: id}
+      })
+    },
   },
   mounted() {
     this.getrecommend();

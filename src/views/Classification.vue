@@ -30,6 +30,20 @@
               :name="item.mallSubId"
               class="right__top__item"
             >
+<!--                <div class="datalist__scroll" ref="personWrap2">-->
+<!--                    <div>-->
+<!--                        <div v-for="(item, index) in datalist" :key="index" class="datalist">-->
+<!--                            <img :src="item.image" alt="" class="item__img" />-->
+<!--                            <div>-->
+<!--                                <div class="item__name">{{ item.name }}</div>-->
+<!--                                <div class="item__price">-->
+<!--                                    ￥{{ item.present_price }}-->
+<!--                                    <span class="item__old__price">{{ item.orl_price }}</span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
               <div
                 v-for="(item, index) in datalist"
                 :key="index"
@@ -53,6 +67,7 @@
 </template>
 
 <script>
+    // import BScroll from "better-scroll"
 export default {
   name: "Classification",
   components: {},
@@ -69,8 +84,7 @@ export default {
   },
   methods: {
     getclassData(name) {
-      this.idObj = name;
-      // console.log(this.idObj);
+        this.idObj = name;
       this.$axios
         .req(`api/classification?mallSubId=${this.idObj}`)
         .then(response => {
@@ -112,7 +126,8 @@ export default {
     this.classDataAll = this.$route.query.categroy;
     console.log(this.classDataAll);
     this.classDataArr = this.$route.query.bxMallSubDto;
-    this.tabnumobj = this.$route.query.index;
+      console.log(this.classDataArr);
+      this.tabnumobj = this.$route.query.index;
     console.log(this.tabnumobj);
     console.log(this.classDataArr);
     if (!this.$route.query.bxMallSubDto) {
@@ -140,7 +155,8 @@ export default {
         console.log(err);
       });
   },
-  created() {},
+  created() {
+  },
   filters: {},
   computed: {},
   watch: {},

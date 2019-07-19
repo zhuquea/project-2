@@ -89,7 +89,9 @@ export default {
       phone: "",
       sms: "",
       verifictioncode: "",
-      src: ""
+      src: "",
+      details_login: "",
+      details_id: ""
     };
   },
   methods: {
@@ -129,7 +131,12 @@ export default {
             });
             localStorage.setItem("user", JSON.stringify(response.userInfo));
             this.$store.state.user = response.userInfo;
-            this.$router.push({ name: "home" });
+            if (this.details_login === true) {
+              this.$router.push({name:"details" , query: {idLogin : this.details_id}})
+              this.$store.state.details_login = false
+            } else {
+              this.$router.push({ name: "home" });
+            }
           }
         })
         .catch(err => {
@@ -163,8 +170,14 @@ export default {
               background: "#1989fa"
             });
             localStorage.setItem("user", JSON.stringify(response.userInfo));
-            this.$store.state.user1 = response.userInfo;
-            this.$router.push({ name: "home" });
+            this.$store.state.user = response.userInfo;
+            if (this.details_login === true) {
+              this.$router.push({name:"details" , query: {idLogin : this.details_id}})
+              this.$store.state.details_login = false
+            } else {
+              this.$router.push({ name: "home" });
+            }
+            // this.$router.push({ name: "home" });
           }
         })
         .catch(err => {
@@ -174,6 +187,9 @@ export default {
   },
   mounted() {
     this.getcode();
+    this.details_login = this.$route.query.details_login
+    this.details_id = this.$route.query.id
+    console.log(this.details_login);
   },
   created() {
     this.getcode1 = _.debounce(this.getcode, 350);

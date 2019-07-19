@@ -9,3 +9,21 @@
     line-height: 40px !important;
   }
 }
+.detail__van__goods__action {
+  .van-goods-action-icon__icon {
+   font-size: 60px !important;
+  }
+  .van-button {
+    font-size: 40px !important;
+  }
+  .van-goods-action-icon {
+    width: 15vw;
+  }
+  display: flex;
+  align-items: center;
+}
+.detail__shop__comment {
+  .van-ellipsis {
+    font-size: 30px;
+  }
+}

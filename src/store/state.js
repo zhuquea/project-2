@@ -1,5 +1,6 @@
 export default {
   user: "",
-  user1: "",
   category: [],
+  details_login: false,
+  showOut: true
 };

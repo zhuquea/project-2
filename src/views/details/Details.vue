@@ -1,32 +1,98 @@
 <template>
   <div class="details__body">
-     <div class="detail__return">
-         <van-icon name="arrow-left" size="25px" color="white"/>
-     </div>
-     <div class="details__second" v-if="detailData.goodsOne">
-         <van-swipe :autoplay="3000" indicator-color="white" @change="onChange">
-             <van-swipe-item><img :src="detailData.goodsOne.image" alt="" class="details__img"></van-swipe-item>
-             <van-swipe-item><img :src="detailData.goodsOne.image_path" alt="" class="details__img"></van-swipe-item>
-             <div class="custom-indicator" slot="indicator">
-                 {{ current + 1 }}/2
-             </div>
-         </van-swipe>
-     </div>
-      <div class="details__name" v-if="detailData.goodsOne">
-          {{detailData.goodsOne.name}}
+    <div class="detail__return" @click="returnObj">
+      <van-icon name="arrow-left" size="25px" color="white" />
+    </div>
+    <div class="details__second" v-if="detailData.goodsOne">
+      <van-swipe :autoplay="3000" indicator-color="white" @change="onChange">
+        <van-swipe-item
+          ><img
+            :src="detailData.goodsOne.image"
+            alt=""
+            class="details__img"
+            @click="preview__img"
+        /></van-swipe-item>
+        <van-swipe-item
+          ><img
+            :src="detailData.goodsOne.image_path"
+            alt=""
+            class="details__img"
+            @click="preview__img"
+        /></van-swipe-item>
+        <div class="custom-indicator" slot="indicator">{{ current + 1 }}/2</div>
+      </van-swipe>
+    </div>
+    <div class="details__name" v-if="detailData.goodsOne">
+      {{ detailData.goodsOne.name }}
+    </div>
+    <div class="details__price" v-if="detailData.goodsOne">
+      ￥{{ detailData.goodsOne.present_price }}
+    </div>
+    <div class="detail__collection" v-if="detailData">
+      <div class="freight">运费：{{ detailData.count }}</div>
+      <div class="surplus" v-if="detailData.goodsOne">
+        剩余：{{ detailData.goodsOne.amount }}
       </div>
-      <div class="details__price" v-if="detailData.goodsOne">
-          ￥{{detailData.goodsOne.present_price}}
+      <!--      <div class="collection" v-if="checkCollect === 0">-->
+      <!--        收藏:<van-icon name="like-o" size="25px" @click="collectionObj" />-->
+      <!--      </div>-->
+      <div class="collection" v-if="checkCollect === 1">
+        取消收藏:<van-icon
+          name="like"
+          size="25px"
+          color="red"
+          @click="collectionObjCancel"
+        />
       </div>
-      <div class="detail__collection" v-if="detailData">
-          <div class="freight">运费：{{detailData.count}}</div>
-          <div class="surplus" v-if="detailData.goodsOne">剩余：{{detailData.goodsOne.amount}}</div>
-          <div class="collection">收藏:<van-icon name="like-o" size="25px"/></div>
+      <div class="collection" v-else>
+        收藏:<van-icon name="like-o" size="25px" @click="collectionObj" />
       </div>
+    </div>
+    <div class="detail__get__into">
+      <div class="get__into__1">
+        <van-icon name="shop-o" size="30px" />
+        <div class="official">
+          有赞的店
+          <van-button type="danger">官方</van-button>
+        </div>
+      </div>
+      <div class="get__into__2">
+        <div>进入店铺</div>
+        <div><van-icon name="arrow" size="15px" /></div>
+      </div>
+    </div>
+    <div class="detail__shop__comment">
+      <van-tabs v-model="active1">
+        <van-tab title="商品详情">
+          <span
+            v-html="detailData.goodsOne.detail"
+            v-if="detailData.goodsOne"
+          ></span>
+        </van-tab>
+        <van-tab title="商品评论">
+          内容 2
+        </van-tab>
+      </van-tabs>
+    </div>
+    <div class="detail__add__cart">
+      <van-goods-action class="detail__van__goods__action">
+        <van-goods-action-icon icon="chat-o" text="客服" />
+        <van-goods-action-icon icon="shopping-cart-o" text="购物车" />
+        <van-goods-action-button
+          type="warning"
+          text="加入购物车"
+          @click="add__to__cart"
+        />
+        <van-goods-action-button type="danger" text="立即购买" />
+      </van-goods-action>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import { ImagePreview } from "vant";
+import { Toast } from "vant";
 export default {
   name: "Details",
   components: {},
@@ -34,8 +100,11 @@ export default {
   data() {
     return {
       goodsId: "",
-        detailData: {},
-        current: 0
+      detailData: {},
+      current: 0,
+      active: "chat",
+      active1: 0,
+      checkCollect: 0
     };
   },
   methods: {
@@ -44,7 +113,7 @@ export default {
         .req(`api/goods/one?id=${this.goodsId}&page=${1}`)
         .then(response => {
           if (response) {
-              this.detailData = response.goods
+            this.detailData = response.goods;
             console.log(this.detailData);
           }
         })
@@ -52,69 +121,195 @@ export default {
           console.log(err);
         });
     },
-      onChange (index) {
-        this.current = index
+    onChange(index) {
+      this.current = index;
+    },
+    returnObj() {
+      // this.$router.go(-1);
+      this.$router.push({ name: "home" });
+    },
+    preview__img() {
+      ImagePreview({
+        images: [
+          this.detailData.goodsOne.image,
+          this.detailData.goodsOne.image
+        ],
+        startPosition: 0,
+        showIndicators: true,
+        onClose() {
+          // do something
+        }
+      });
+    },
+    collectionObj() {
+      if (!localStorage.getItem("user")) {
+        this.$router.push({
+          name: "login",
+          query: { details_login: this.details_login, id: this.goodsId }
+        });
+      } else if (localStorage.getItem("user")) {
+        axios
+          .post("api/collection", this.detailData.goodsOne)
+          .then(response => {
+            if (response) {
+              Toast({
+                message: "收藏成功",
+                type: "success",
+                duration: 2000
+              });
+              console.log(response);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        this.checkCollect = 1;
       }
+    },
+    collectionObjCancel() {
+      this.$axios
+        .req("api/cancelCollection", { id: this.goodsId })
+        .then(response => {
+          if (response) {
+            Toast({
+              message: "取消收藏成功",
+              type: "fail",
+              duration: 2000
+            });
+            console.log(response);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      this.checkCollect = 0;
+    },
+    checkCollection() {
+      this.$axios
+        .req("api/isCollection", { id: this.goodsId })
+        .then(response => {
+          if (response) {
+            this.checkCollect = response.isCollection;
+            console.log(this.checkCollect);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    add__to__cart() {
+      console.log(111);
+    }
   },
   mounted() {
-    this.goodsId = this.$route.query.id;
+    // this.goodsId = this.$route.query.id;
+    if (this.$route.query.idLogin) {
+      this.goodsId = this.$route.query.idLogin;
+    } else {
+      this.goodsId = this.$route.query.id;
+    }
     this.getDetailsData();
   },
-  created() {},
+  created() {
+    this.$nextTick(() => {
+      this.checkCollection();
+    });
+  },
   filters: {},
-  computed: {},
+  computed: {
+    details_login() {
+      return this.$store.state.details_login;
+    }
+  },
   watch: {},
   directives: {}
 };
 </script>
 
 <style scoped lang="scss">
-    .details__body {
-        width: 100vw;
-        padding: 20px;
-    }
-    .detail__return {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background-color: #7d7e80;
-        text-align: center;
-        line-height: 60px;
-    }
-    .van-icon:before {
-      line-height: 60px;
-    }
-    .details__second {
-        width: 100vw;
-        text-align: center;
-    }
-    .details__img {
-        height: 600px;
-    }
-    .details__name {
-        width: 100vw;
-        font-size: 30px;
-    }
-    .details__price {
-        width: 100vw;
-        font-size: 30px;
-        color: #ce272d;
-    }
-    .detail__collection {
-        width: 100vw;
-        display: flex;
-        align-items: center;
-        font-size: 30px;
-    }
-    .freight {
-        flex: 1;
-    }
-    .surplus {
-        flex: 1;
-    }
-    .collection {
-        display: flex;
-        align-items: center;
-        flex: 1;
-    }
+.details__body {
+  width: 100vw;
+  height: 100vh;
+}
+.detail__return {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #7d7e80;
+  text-align: center;
+  line-height: 60px;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.van-icon:before {
+  line-height: 60px;
+}
+.details__second {
+  width: 100vw;
+  text-align: center;
+}
+.details__img {
+  height: 600px;
+}
+.details__name {
+  width: 100vw;
+  font-size: 30px;
+  margin-top: 40px;
+}
+.details__price {
+  width: 100vw;
+  font-size: 30px;
+  color: #ce272d;
+  margin-top: 40px;
+}
+.detail__collection {
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  font-size: 30px;
+  margin-top: 40px;
+}
+.freight {
+  flex: 1;
+}
+.surplus {
+  flex: 1;
+}
+.collection {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.detail__get__into {
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+.get__into__1 {
+  display: flex;
+  align-items: center;
+}
+.official {
+  font-size: 30px;
+}
+.get__into__2 {
+  display: flex;
+  align-items: center;
+  padding-right: 30px;
+  font-size: 30px;
+}
+.detail__shop__comment {
+  width: 100vw;
+  margin-top: 60px;
+}
+.detail__add__cart {
+  width: 100vw;
+}
+.van-goods-action-icon {
+  font-size: 30px !important;
+}
+.van-button--large {
+  height: 100px !important;
+}
 </style>

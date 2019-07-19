@@ -9,10 +9,13 @@
         <van-icon name="manager" size="50px" color="orange" />
       </div>
       <div class="second__user">
-        欢迎您：{{userInfo.nickname}}
+        欢迎您：<span v-if="userInfo">{{ userInfo.nickname }}</span>
       </div>
-      <div class="second__out">
+      <div class="second__out" @click="login__Out" v-if="showOut === false">
         退出登录
+      </div>
+      <div class="second__out" @click="login__Out1" v-else-if="showOut">
+        请登录
       </div>
     </div>
   </div>
@@ -25,17 +28,42 @@ export default {
   props: {},
   data() {
     return {
-      userInfo: {}
     };
   },
-  methods: {},
-  mounted() {
-    this.userInfo = JSON.parse(localStorage.getItem('user'))
-    console.log(this.userInfo);
+  methods: {
+    login__Out() {
+      this.$axios
+        .req("api/loginOut", {})
+        .then(response => {
+          if (response) {
+            localStorage.removeItem("user");
+            this.$store.state.user = "";
+            this.$store.state.details_login = true
+            console.log(this.userInfo);
+            console.log(response);
+           this.$store.state.showOut = !this.$store.state.showOut
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    login__Out1 () {
+      this.$router.push({name: "login"})
+      this.$store.state.showOut = !this.$store.state.showOut
+    }
   },
+  mounted() {},
   created() {},
   filters: {},
-  computed: {},
+  computed: {
+    userInfo() {
+      return this.$store.state.user;
+    },
+    showOut () {
+      return this.$store.state.showOut
+    }
+  },
   watch: {},
   directives: {}
 };
