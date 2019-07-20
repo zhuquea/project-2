@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="my__body">
     <div class="my__first">会员中心</div>
     <div class="my__second">
-      <div class="second__set">
+      <div class="second__set" @click="jump__personal__data">
         <van-icon name="setting" size="20px" />
       </div>
       <div class="second__manager">
@@ -18,6 +18,62 @@
         请登录
       </div>
     </div>
+    <div class="my__third">
+      <div>
+        <van-icon name="paid" size="25px"/>
+        <div>待付款</div>
+      </div>
+      <div>
+        <van-icon name="shop-o" size="25px"/>
+        <div>待发货</div>
+      </div>
+      <div>
+        <van-icon name="logistics" size="25px"/>
+        <div>待收货</div>
+      </div>
+      <div>
+        <van-icon name="records" info="0" size="25px"/>
+        <div>评价</div>
+      </div>
+      <div>
+        <van-icon name="points" size="25px"/>
+        <div>已完成</div>
+      </div>
+    </div>
+    <div class="my__fourth">
+     <div class="fourth__left">
+       <van-icon name="orders-o" size="25px"/>全部订单
+     </div>
+      <div class="fourth__right">
+        〉
+      </div>
+    </div>
+    <div class="my__fifth">
+      <div class="fifth__item">
+        <div class="fourth__left">
+          <van-icon name="points" size="25px"/>收藏商品
+        </div>
+        <div class="fourth__right">
+          〉
+        </div>
+      </div>
+      <div class="fifth__item">
+        <div class="fourth__left">
+          <van-icon name="wap-home" size="25px"/>地址管理
+        </div>
+        <div class="fourth__right">
+          〉
+        </div>
+      </div>
+      <div class="fifth__item">
+        <div class="fourth__left">
+          <van-icon name="description" size="25px"/>最近浏览
+        </div>
+        <div class="fourth__right">
+          〉
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -28,6 +84,7 @@ export default {
   props: {},
   data() {
     return {
+      active: 0
     };
   },
   methods: {
@@ -48,12 +105,27 @@ export default {
           console.log(err);
         });
     },
-    login__Out1 () {
+    login__Out1() {
       this.$router.push({name: "login"})
       this.$store.state.showOut = !this.$store.state.showOut
+    },
+    getUserData () {
+      this.$axios.req("api/queryUser",{}).then((response) => {
+        if (response.code === 200) {
+          this.$store.state.userData = response.userInfo
+          console.log(this.$store.state.userData);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+    jump__personal__data() {
+      this.$router.push({name: "personal"})
     }
   },
-  mounted() {},
+  mounted() {
+    this.getUserData()
+  },
   created() {},
   filters: {},
   computed: {
@@ -70,6 +142,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .my__body {
+    width: 100vw;
+  }
 .my__first {
   width: 100%;
   line-height: 70px;
@@ -120,4 +195,44 @@ export default {
   left: 50%;
   transform: translate(-100px);
 }
+  .my__third {
+    width: 100vw;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    font-size: 30px;
+    align-items: center;
+  text-align: center;
+  }
+  .van-info {
+    line-height: 30px !important;
+    min-width: 30px !important;
+    font-size: 20px !important;
+  }
+  .my__fourth {
+    width: 100vw;
+    font-size: 30px;
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .fourth__left {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+  }
+  .fourth__right {
+    font-size: 30px;
+    padding-right: 10px;
+  }
+  .my__fifth {
+    margin-top: 50px;
+  }
+  .fifth__item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 30px;
+    margin-top: 20px;
+  }
 </style>

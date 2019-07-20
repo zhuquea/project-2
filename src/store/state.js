@@ -1,6 +1,8 @@
 export default {
   user: "",
   category: [],
-  details_login: false,
-  showOut: true
+  details_login: true,
+  showOut: true,
+  shopping_Cart: [],
+  userData: {}
 };

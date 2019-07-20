@@ -119,7 +119,7 @@ export default {
             console.log(response);
           }
           if (response.code === -1) {
-            this.$notify("请输入完整信息或者用户名错误");
+            this.$notify("请输入完整信息或者用户名密码错误");
           } else if (response.code === -2) {
             this.$notify("验证码错误");
             this.getcode();
@@ -134,8 +134,10 @@ export default {
             if (this.details_login === true) {
               this.$router.push({name:"details" , query: {idLogin : this.details_id}})
               this.$store.state.details_login = false
+              this.$store.state.showOut = false
             } else {
               this.$router.push({ name: "home" });
+              this.$store.state.showOut = false
             }
           }
         })
@@ -174,8 +176,10 @@ export default {
             if (this.details_login === true) {
               this.$router.push({name:"details" , query: {idLogin : this.details_id}})
               this.$store.state.details_login = false
+              this.$store.state.showOut = false
             } else {
               this.$router.push({ name: "home" });
+              this.$store.state.showOut = false
             }
             // this.$router.push({ name: "home" });
           }

@@ -49,7 +49,7 @@
                 :key="index"
                 class="datalist"
               >
-                <img :src="item.image" alt="" class="item__img" />
+                <img :src="item.image" alt="" class="item__img"/>
                 <div>
                   <div class="item__name">{{ item.name }}</div>
                   <div class="item__price">
@@ -180,6 +180,7 @@ export default {
 }
 .classification__left {
   width: 20vw;
+    height: 100vh;
   background-color: #7d7e80;
 }
 .left__item {

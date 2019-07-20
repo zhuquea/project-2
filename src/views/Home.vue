@@ -59,7 +59,7 @@
             </div>
             <div class="recomend__footer">
               <span class="recommend__cart"><van-icon name="cart"/></span>
-              <span class="recommend__check">查看详情</span>
+              <span class="recommend__check" @click="jump__details(item)">查看详情</span>
             </div>
           </div>
         </div>

@@ -61,6 +61,15 @@ const router = new Router({
         title: "商品详情",
         showFooter: false
       }
+    },
+    {
+      path: "/personal",
+      name: "personal",
+      component: () => import("../views/personalData/PersonalData.vue"),
+      meta: {
+        title: "个人资料",
+        showFooter: false
+      }
     }
   ]
 });

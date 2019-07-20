@@ -77,13 +77,27 @@
     <div class="detail__add__cart">
       <van-goods-action class="detail__van__goods__action">
         <van-goods-action-icon icon="chat-o" text="客服" />
-        <van-goods-action-icon icon="shopping-cart-o" text="购物车" />
+        <van-goods-action-icon icon="shopping-cart-o" :info="this.$store.state.shopping_Cart.length" text="购物车" />
         <van-goods-action-button
           type="warning"
           text="加入购物车"
           @click="add__to__cart"
         />
-        <van-goods-action-button type="danger" text="立即购买" />
+        <van-goods-action-button type="danger" text="立即购买" @click="shopping_now"/>
+        <van-action-sheet v-model="show" :title="detailData.goodsOne.name" cancel-text="立即购买" v-if="detailData.goodsOne">
+         <div class="van__action__sheet">
+           <div>
+             <div class="purchase__quantity">购买数量：</div>
+             <div class="residual__quantity">
+               剩余数量：{{ detailData.goodsOne.amount }} 件
+               <span class="residual__quantity__1">每人限购50件</span>
+             </div>
+           </div>
+           <div class="van__stepper">
+             <van-stepper v-model="valueObj" :disable-input="disabled" input-width="40px" button-size="30px"/>
+           </div>
+         </div>
+        </van-action-sheet>
       </van-goods-action>
     </div>
   </div>
@@ -104,7 +118,10 @@ export default {
       current: 0,
       active: "chat",
       active1: 0,
-      checkCollect: 0
+      checkCollect: 0,
+      show: false,
+      valueObj: 1,
+      disabled: true
     };
   },
   methods: {
@@ -142,12 +159,12 @@ export default {
       });
     },
     collectionObj() {
-      if (!localStorage.getItem("user")) {
+      if (!this.$store.state.user) {
         this.$router.push({
           name: "login",
           query: { details_login: this.details_login, id: this.goodsId }
         });
-      } else if (localStorage.getItem("user")) {
+      } else if (this.$store.state.user) {
         axios
           .post("api/collection", this.detailData.goodsOne)
           .then(response => {
@@ -185,20 +202,45 @@ export default {
       this.checkCollect = 0;
     },
     checkCollection() {
-      this.$axios
-        .req("api/isCollection", { id: this.goodsId })
-        .then(response => {
-          if (response) {
-            this.checkCollect = response.isCollection;
-            console.log(this.checkCollect);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      if (this.$store.state.user) {
+        this.$axios
+                .req("api/isCollection", { id: this.goodsId })
+                .then(response => {
+                  if (response) {
+                    this.checkCollect = response.isCollection;
+                    console.log(this.checkCollect);
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+      }
     },
     add__to__cart() {
-      console.log(111);
+       if (!this.$store.state.user) {
+         this.$router.push({
+           name: "login",
+           query: {details_login: this.details_login, id: this.goodsId}
+         })
+       } else if (this.$store.state.user) {
+         this.$axios.req("api/addShop",{id: this.goodsId}).then((response) => {
+           if (response.code ===200) {
+             Toast({
+               message: "加入购物车成功",
+               type: "success",
+               duration: 2000
+             });
+             this.$store.state.shopping_Cart.push(this.detailData.goodsOne)
+             console.log(this.$store.state.shopping_Cart);
+             console.log(response);
+           }
+         }).catch((err) => {
+           console.log(err);
+         })
+       }
+    },
+    shopping_now () {
+      this.show = true
     }
   },
   mounted() {
@@ -311,5 +353,49 @@ export default {
 }
 .van-button--large {
   height: 100px !important;
+}
+.van-info {
+  line-height: 30px !important;
+  min-width: 30px !important;
+  font-size: 20px !important;
+}
+.van-action-sheet {
+  height: 320px !important;
+}
+.van-action-sheet__header {
+  height: 150px;
+  font-size: 25px !important;
+  line-height: 80px !important;
+}
+  .van-icon[data-v-1dd994aa]:before {
+    font-size: 35px !important;
+  }
+  .van__action__sheet {
+    width: 100vw;
+    display: flex;
+  }
+  .purchase__quantity {
+    margin-left: 20px;
+    font-size: 25px;
+  }
+.residual__quantity {
+  margin-top: 10px;
+  margin-left: 20px;
+  font-size: 20px;
+  color: #7d7e80;
+}
+  .residual__quantity__1 {
+    margin-left: 20px;
+    font-size: 20px;
+    color: #ce272d;
+  }
+  .van__stepper {
+
+  }
+.van-action-sheet__cancel {
+  font-size: 30px !important;
+  background-color: #ce272d !important;
+  color: white !important;
+  line-height: 80px !important;
 }
 </style>
