@@ -50,9 +50,9 @@ export default {
   name: "Footer",
   components: {},
   props: {
-    tabnum1: {
+    tabnum: {
       type: Number
-    }
+    },
   },
   data() {
     return {
@@ -73,27 +73,27 @@ export default {
           name: "user-o",
           content: "我的"
         }
-      ],
-      tabnum: 0
+      ]
     };
   },
   methods: {
     switchclass0() {
-      this.tabnum = 0;
+      this.$emit('update:tabnum', 0)
       this.$router.push({ name: "home" });
     },
     switchclass1() {
-      this.tabnum = 1;
+      this.$emit('update:tabnum', 1)
       this.$router.push({
         name: "classification",
         query: { categroy: this.$store.state.category }
       });
     },
     switchclass2() {
-      this.tabnum = 2;
+      this.$emit('update:tabnum', 2)
+      this.$router.push({name: "shoppingCart"})
     },
     switchclass3() {
-      this.tabnum = 3;
+      this.$emit('update:tabnum', 3)
       this.$router.push({ name: "membership" });
     }
   },
@@ -101,12 +101,7 @@ export default {
   created() {},
   filters: {},
   computed: {},
-  watch: {
-    tabnum1(val) {
-      console.log(val);
-      this.tabnum = 1;
-    }
-  },
+  watch: {},
   directives: {}
 };
 </script>

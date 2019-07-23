@@ -233,6 +233,7 @@ export default {
       });
     },
     jump__details (item) {
+      this.$store.state.shopping_Cart.push(item.goodsId)
       this.$router.push({
         name: "details",
         query: {id: item.goodsId}

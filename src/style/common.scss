@@ -30,3 +30,37 @@
     z-index: 0 !important;
   }
 }
+.edit__address__second {
+  width: 100vw !important;
+  .van-button {
+    height: 80px !important;
+  }
+  .van-button--normal {
+    font-size: 30px !important;
+  }
+  .van-cell {
+    line-height: 50px !important;
+    font-size: 30px !important;
+    width: 100vw !important;
+  }
+  .van-field__label {
+    width: 18vw !important;
+  }
+  .van-field__control {
+    height: 50px !important;
+  }
+}
+.item__stepper {
+  .van-stepper__minus {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  .van-stepper__input {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  .van-stepper__plus {
+    width: 50px !important;
+    height: 50px !important;
+  }
+}

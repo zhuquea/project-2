@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view />
-    <Footer v-if="$route.meta.showFooter" :tabnum1="tabnum1"></Footer>
+    <Footer v-if="$route.meta.showFooter" :tabnum.sync="tabnum"></Footer>
   </div>
 </template>
 <script>
@@ -13,14 +13,19 @@ export default {
   },
   data() {
     return {
-      tabnum1: 0
+      tabnum: 0
     };
   },
   watch: {
-    $route (to) {
-      console.log(to)
+    $route(to) {
       if (to.path === "/classification") {
-        this.tabnum1 = Math.random()
+        this.tabnum = 1;
+      } else if (to.path === "/membership") {
+        this.tabnum = 3;
+      } else if (to.path === "/") {
+        this.tabnum = 0;
+      } else if (to.path === "/shoppingCart") {
+        this.tabnum = 2;
       }
     }
   }

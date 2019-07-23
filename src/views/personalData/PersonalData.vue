@@ -16,7 +16,18 @@
         头像
       </div>
       <div class="third__right">
-        <van-icon name="manager" size="50px" color="orange" />
+        <van-icon
+          name="manager"
+          size="50px"
+          color="orange"
+          v-if="!userData"
+        />
+        <img
+          :src="userData.avatar"
+          alt=""
+          v-else-if="userData"
+          class="third__right__image"
+        />
         <van-icon name="arrow" size="20px" color="blue" />
       </div>
     </div>
@@ -25,7 +36,11 @@
         用户名
       </div>
       <div class="fourth__right">
-        <van-field v-model="value0" :placeholder="userDataObj.username" />
+        <van-field
+          v-model="value0"
+          :placeholder="userData.username"
+          disabled
+        />
       </div>
     </div>
     <div class="personal__fifth">
@@ -33,7 +48,10 @@
         昵称
       </div>
       <div class="fifth__right">
-        <van-field v-model="value1" :placeholder="userDataObj.nickname" />
+        <van-field
+          v-model="userData.nickname"
+          :placeholder="userData.nickname"
+        />
       </div>
     </div>
     <div class="personal__fifth">
@@ -41,7 +59,20 @@
         性别
       </div>
       <div class="fifth__right">
-        <van-field v-model="value2" :placeholder="userDataObj.gender" />
+        <van-field
+          v-model="userData.gender"
+          :placeholder="userData.gender"
+          @click="switch__showGender"
+        />
+        <van-action-sheet v-model="showGender">
+          <van-picker
+            show-toolbar
+            title="性别"
+            :columns="columns"
+            @confirm="onConfirm"
+            @cancel="onCancel"
+          />
+        </van-action-sheet>
       </div>
     </div>
     <div class="personal__fifth">
@@ -56,18 +87,35 @@
       <div class="sixth__left">
         出生年月
       </div>
-      <div class="sixth__right"></div>
+      <div class="sixth__right" @click="switch__show">
+        {{ userData.year }}年{{ userData.month }}月{{ userData.day }}日
+      </div>
+        <van-popup position="bottom" v-model="showYear" @select="onSelect">
+          <van-datetime-picker
+            v-model="currentDate"
+            type="date"
+            :min-date="minDate"
+            @confirm="onConfirm1"
+            @cancel="onCancel1"
+          />
+        </van-popup>
     </div>
     <div class="personal__seventh">
-      <van-button type="primary" size="large">保存</van-button>
+      <van-button type="primary" size="large" @click="save__User"
+        >保存</van-button
+      >
     </div>
     <div class="personal__seventh">
-      <van-button type="warning" size="large">取消</van-button>
+      <van-button type="warning" size="large" @click="cancelObj"
+        >取消</van-button
+      >
     </div>
   </div>
 </template>
 
 <script>
+import { Toast } from "vant";
+import axios from "axios";
 export default {
   name: "PersonalData",
   components: {},
@@ -75,22 +123,83 @@ export default {
   data() {
     return {
       value0: "",
-      value1: "",
-      value2: "",
-      value3: ""
+      value3: "",
+      showYear: false,
+      showGender: false,
+      currentDate: new Date(),
+      minDate: new Date(2017, 1, 1),
+      columns: ["男", "女", "保密"],
     };
   },
   methods: {
     personalReturn() {
       this.$router.push({ name: "membership" });
+    },
+    switch__show() {
+      this.showYear = true;
+    },
+    onSelect() {
+      this.showYear = false;
+    },
+    switch__showGender() {
+      this.showGender = true;
+    },
+    onConfirm(value, index) {
+      console.log(index);
+      this.$store.state.user.gender = value;
+      this.showGender = false;
+      // Toast(`当前值：${value}, 当前索引：${index}`);
+    },
+    onCancel() {
+      // Toast('取消');
+      this.showGender = false;
+    },
+    onConfirm1(value) {
+      this.$store.state.user.year = value.getFullYear()
+      this.$store.state.user.month = value.getMonth()
+      this.$store.state.user.day = value.getDay()
+      this.showYear = false;
+      console.log(this.showYear);
+    },
+    onCancel1() {
+      this.showYear = false;
+    },
+    save__User() {
+      let UserData = {
+        day: this.$store.state.user.day,
+        gender: this.$store.state.user.gender,
+        month: this.$store.state.user.month,
+        nickname: this.$store.state.user.nickname,
+        year: this.$store.state.user.year,
+        id: this.$store.state.user._id
+      }
+      axios
+        .post("api/saveUser", UserData )
+        .then(response => {
+          if (response.code === 200) {
+            Toast({
+              message: "保存成功",
+              type: "success",
+              duration: 2000
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      this.$router.push({ name: "membership" });
+    },
+    cancelObj() {
+      this.$router.push({ name: "membership" });
     }
   },
-  mounted() {},
+  mounted() {
+  },
   created() {},
   filters: {},
   computed: {
-    userDataObj() {
-      return this.$store.state.userData;
+    userData() {
+      return this.$store.state.user;
     }
   },
   watch: {},
@@ -148,6 +257,9 @@ export default {
   text-align: center;
   display: flex;
   align-items: center;
+}
+.third__right__image {
+  height: 100px;
 }
 .fourth__left {
   width: 20vw;

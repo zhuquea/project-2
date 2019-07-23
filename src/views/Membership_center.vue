@@ -6,7 +6,8 @@
         <van-icon name="setting" size="20px" />
       </div>
       <div class="second__manager">
-        <van-icon name="manager" size="50px" color="orange" />
+        <van-icon name="manager" size="50px" color="orange" v-if="!this.$store.state.user"/>
+        <img :src="userInfo.avatar" alt="" v-else-if="this.$store.state.user" class="second__user__image">
       </div>
       <div class="second__user">
         欢迎您：<span v-if="userInfo">{{ userInfo.nickname }}</span>
@@ -57,7 +58,7 @@
           〉
         </div>
       </div>
-      <div class="fifth__item">
+      <div class="fifth__item" @click="jump__AddressList">
         <div class="fourth__left">
           <van-icon name="wap-home" size="25px"/>地址管理
         </div>
@@ -95,7 +96,8 @@ export default {
           if (response) {
             localStorage.removeItem("user");
             this.$store.state.user = "";
-            this.$store.state.details_login = true
+            this.$store.state.userData = "";
+            this.$store.state.details_login = true;
             console.log(this.userInfo);
             console.log(response);
            this.$store.state.showOut = !this.$store.state.showOut
@@ -112,8 +114,8 @@ export default {
     getUserData () {
       this.$axios.req("api/queryUser",{}).then((response) => {
         if (response.code === 200) {
-          this.$store.state.userData = response.userInfo
-          console.log(this.$store.state.userData);
+          this.$store.state.user = response.userInfo
+          console.log(this.$store.state.user);
         }
       }).catch((err) => {
         console.log(err);
@@ -121,6 +123,10 @@ export default {
     },
     jump__personal__data() {
       this.$router.push({name: "personal"})
+    },
+    jump__AddressList() {
+      this.$store.state.returnMember = true
+      this.$router.push({name: "addressList"})
     }
   },
   mounted() {
@@ -173,6 +179,9 @@ export default {
   top: 80px;
   left: 50%;
   transform: translate(-60px);
+}
+.second__user__image {
+  height: 120px;
 }
 .second__user {
   width: 100vw;

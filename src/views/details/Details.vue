@@ -42,7 +42,7 @@
           size="25px"
           color="red"
           @click="collectionObjCancel"
-        />
+        ></van-icon>
       </div>
       <div class="collection" v-else>
         收藏:<van-icon name="like-o" size="25px" @click="collectionObj" />
@@ -74,29 +74,121 @@
         </van-tab>
       </van-tabs>
     </div>
-    <div class="detail__add__cart">
+    <div class="detail__add__cart" v-if="this.$store.state.user && this.$store.state.shopping_Cart1">
       <van-goods-action class="detail__van__goods__action">
         <van-goods-action-icon icon="chat-o" text="客服" />
-        <van-goods-action-icon icon="shopping-cart-o" :info="this.$store.state.shopping_Cart.length" text="购物车" />
+        <van-goods-action-icon
+          icon="shopping-cart-o"
+          :info="info__Data"
+          text="购物车"
+        ></van-goods-action-icon>
         <van-goods-action-button
           type="warning"
           text="加入购物车"
           @click="add__to__cart"
-        />
-        <van-goods-action-button type="danger" text="立即购买" @click="shopping_now"/>
-        <van-action-sheet v-model="show" :title="detailData.goodsOne.name" cancel-text="立即购买" v-if="detailData.goodsOne">
-         <div class="van__action__sheet">
-           <div>
-             <div class="purchase__quantity">购买数量：</div>
-             <div class="residual__quantity">
-               剩余数量：{{ detailData.goodsOne.amount }} 件
-               <span class="residual__quantity__1">每人限购50件</span>
-             </div>
-           </div>
-           <div class="van__stepper">
-             <van-stepper v-model="valueObj" :disable-input="disabled" input-width="40px" button-size="30px"/>
-           </div>
-         </div>
+        ></van-goods-action-button>
+        <van-goods-action-button
+          type="danger"
+          text="立即购买"
+          @click="shopping_now"
+        ></van-goods-action-button>
+        <van-action-sheet
+          v-model="show"
+          :title="detailData.goodsOne.name"
+          v-if="detailData.goodsOne"
+          class="van__shopping__now"
+        >
+          <div class="van__action__sheetObj">
+            <div>
+              <div class="purchase__quantity">购买数量：</div>
+              <div class="residual__quantity">
+                剩余数量：{{ detailData.goodsOne.amount }} 件
+                <span class="residual__quantity__1">每人限购50件</span>
+              </div>
+            </div>
+            <div class="van__stepper">
+              <van-stepper
+                v-model="valueObj"
+                :disable-input="disabled"
+                max="50"
+                input-width="40px"
+                button-size="30px"></van-stepper>
+            </div>
+            <div class="van__action__img">
+              <img
+                :src="detailData.goodsOne.image"
+                alt=""
+                class="van__action__img__image"
+              />
+            </div>
+            <div class="van__action__price">
+              ￥{{ detailData.goodsOne.present_price }}
+            </div>
+          </div>
+          <div class="van__action__sheetObj2">
+            <van-button type="danger" @click="shopping__Now"
+              >立即购买</van-button
+            >
+          </div>
+        </van-action-sheet>
+      </van-goods-action>
+    </div>
+    <div class="detail__add__cart" v-else-if="!this.$store.state.user">
+      <van-goods-action class="detail__van__goods__action">
+        <van-goods-action-icon icon="chat-o" text="客服" />
+        <van-goods-action-icon
+          icon="shopping-cart-o"
+          info="0"
+          text="购物车"
+        ></van-goods-action-icon>
+        <van-goods-action-button
+          type="warning"
+          text="加入购物车"
+          @click="add__to__cart"
+        ></van-goods-action-button>
+        <van-goods-action-button
+          type="danger"
+          text="立即购买"
+          @click="shopping_now"
+        ></van-goods-action-button>
+        <van-action-sheet
+          v-model="show"
+          :title="detailData.goodsOne.name"
+          v-if="detailData.goodsOne"
+          class="van__shopping__now"
+        >
+          <div class="van__action__sheetObj">
+            <div>
+              <div class="purchase__quantity">购买数量：</div>
+              <div class="residual__quantity">
+                剩余数量：{{ detailData.goodsOne.amount }} 件
+                <span class="residual__quantity__1">每人限购50件</span>
+              </div>
+            </div>
+            <div class="van__stepper">
+              <van-stepper
+                v-model="valueObj"
+                :disable-input="disabled"
+                max="50"
+                input-width="40px"
+                button-size="30px"></van-stepper>
+            </div>
+            <div class="van__action__img">
+              <img
+                :src="detailData.goodsOne.image"
+                alt=""
+                class="van__action__img__image"
+              />
+            </div>
+            <div class="van__action__price">
+              ￥{{ detailData.goodsOne.present_price }}
+            </div>
+          </div>
+          <div class="van__action__sheetObj2">
+            <van-button type="danger" @click="shopping__Now"
+              >立即购买</van-button
+            >
+          </div>
         </van-action-sheet>
       </van-goods-action>
     </div>
@@ -131,7 +223,7 @@ export default {
         .then(response => {
           if (response) {
             this.detailData = response.goods;
-            console.log(this.detailData);
+            // console.log(this.detailData);
           }
         })
         .catch(err => {
@@ -204,53 +296,90 @@ export default {
     checkCollection() {
       if (this.$store.state.user) {
         this.$axios
-                .req("api/isCollection", { id: this.goodsId })
-                .then(response => {
-                  if (response) {
-                    this.checkCollect = response.isCollection;
-                    console.log(this.checkCollect);
-                  }
-                })
-                .catch(err => {
-                  console.log(err);
-                });
+          .req("api/isCollection", { id: this.goodsId })
+          .then(response => {
+            if (response) {
+              this.checkCollect = response.isCollection;
+              console.log(this.checkCollect);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
     },
     add__to__cart() {
-       if (!this.$store.state.user) {
-         this.$router.push({
-           name: "login",
-           query: {details_login: this.details_login, id: this.goodsId}
-         })
-       } else if (this.$store.state.user) {
-         this.$axios.req("api/addShop",{id: this.goodsId}).then((response) => {
-           if (response.code ===200) {
-             Toast({
-               message: "加入购物车成功",
-               type: "success",
-               duration: 2000
-             });
-             this.$store.state.shopping_Cart.push(this.detailData.goodsOne)
-             console.log(this.$store.state.shopping_Cart);
-             console.log(response);
-           }
-         }).catch((err) => {
-           console.log(err);
-         })
-       }
+      if (!this.$store.state.user) {
+        this.$router.push({
+          name: "login",
+          query: { details_login: this.details_login, id: this.goodsId }
+        });
+      } else if (this.$store.state.user) {
+        this.$axios
+          .req("api/addShop", { id: this.goodsId })
+          .then(response => {
+            if (response.code === 200) {
+              Toast({
+                message: "加入购物车成功",
+                type: "success",
+                duration: 2000
+              });
+              this.getShoppingCard();
+              console.log(this.$store.state.shopping_Cart1);
+              console.log(response);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
     },
-    shopping_now () {
-      this.show = true
+    shopping_now() {
+      this.show = true;
+    },
+    shopping__Now() {
+      if (!this.$store.state.user) {
+        this.$router.push({
+          name: "login",
+          query: { details_login: this.details_login, id: this.goodsId }
+        });
+      } else if (this.$store.state.user) {
+        this.$router.push({
+          name: "orderSettlement",
+          query: {
+            idOrder: this.goodsId,
+            data: this.detailData.goodsOne,
+            valueObj: this.valueObj
+          }
+        });
+      }
+    },
+    getShoppingCard() {
+      this.$axios
+        .req("api/getCard", {})
+        .then(response => {
+          if (response) {
+            this.shopping_Cart = response.shopList;
+            this.$store.state.shopping_Cart1 = response.shopList;
+            console.log(this.shopping_Cart);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   mounted() {
     // this.goodsId = this.$route.query.id;
     if (this.$route.query.idLogin) {
       this.goodsId = this.$route.query.idLogin;
-    } else {
+    } else if (this.$route.query.id) {
       this.goodsId = this.$route.query.id;
+    } else if (this.$route.query.idOrder) {
+      this.goodsId = this.$route.query.idOrder;
     }
     this.getDetailsData();
+    this.getShoppingCard();
   },
   created() {
     this.$nextTick(() => {
@@ -261,6 +390,9 @@ export default {
   computed: {
     details_login() {
       return this.$store.state.details_login;
+    },
+    info__Data() {
+      return this.$store.state.shopping_Cart1.length;
     }
   },
   watch: {},
@@ -360,42 +492,70 @@ export default {
   font-size: 20px !important;
 }
 .van-action-sheet {
-  height: 320px !important;
+  height: 380px !important;
 }
 .van-action-sheet__header {
-  height: 150px;
+  height: 200px;
   font-size: 25px !important;
   line-height: 80px !important;
 }
-  .van-icon[data-v-1dd994aa]:before {
-    font-size: 35px !important;
-  }
-  .van__action__sheet {
-    width: 100vw;
-    display: flex;
-  }
-  .purchase__quantity {
-    margin-left: 20px;
-    font-size: 25px;
-  }
+.van-icon[data-v-1dd994aa]:before {
+  font-size: 35px !important;
+}
+.van__action__sheetObj {
+  width: 100vw;
+  display: flex;
+  position: relative;
+}
+.purchase__quantity {
+  margin-left: 20px;
+  font-size: 25px;
+}
 .residual__quantity {
   margin-top: 10px;
   margin-left: 20px;
   font-size: 20px;
   color: #7d7e80;
 }
-  .residual__quantity__1 {
-    margin-left: 20px;
-    font-size: 20px;
-    color: #ce272d;
-  }
-  .van__stepper {
-
-  }
+.residual__quantity__1 {
+  margin-left: 20px;
+  font-size: 20px;
+  color: #ce272d;
+}
+.van__stepper {
+}
 .van-action-sheet__cancel {
   font-size: 30px !important;
   background-color: #ce272d !important;
   color: white !important;
   line-height: 80px !important;
+}
+.van__shopping__now {
+  width: 100vw;
+}
+.van__action__img {
+  position: absolute;
+  top: -200px;
+  left: 0px;
+  z-index: 10000;
+}
+.van__action__img__image {
+  height: 200px;
+  z-index: 10000;
+}
+.van__action__price {
+  position: absolute;
+  top: -80px;
+  left: 220px;
+  font-size: 20px;
+  color: #ce272d;
+}
+.detail__van__goods__action .van-button {
+  width: 100vw !important;
+  font-size: 40px !important;
+  height: 80px;
+}
+.van__action__sheetObj2 {
+  margin-top: 10px;
 }
 </style>

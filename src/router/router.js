@@ -70,6 +70,42 @@ const router = new Router({
         title: "个人资料",
         showFooter: false
       }
+    },
+    {
+      path: "/orderSettlement",
+      name: "orderSettlement",
+      component: () => import("../views/order_settlement/OrderSettlement.vue"),
+      meta: {
+        title: "订单结算",
+        showFooter: false
+      }
+    },
+    {
+      path: "/addressList",
+      name: "addressList",
+      component: () => import("../views/addressList/AddressList.vue"),
+      meta: {
+        title: "地址列表",
+        showFooter: false
+      }
+    },
+    {
+      path: "/editAddress",
+      name: "editAddress",
+      component: () => import("../views/editAddress/EditAddress.vue"),
+      meta: {
+        title: "编辑地址",
+        showFooter: false
+      }
+    },
+    {
+      path: "/shoppingCart",
+      name: "shoppingCart",
+      component: () => import("../views/shoppingCart/ShoppingCart.vue"),
+      meta: {
+        title: "购物车",
+        showFooter: true
+      }
     }
   ]
 });

@@ -22,6 +22,7 @@
             line-width="60px"
             @click="getclassData"
             style="margin-top: 10px"
+            v-model="activeObj"
           >
             <van-tab
               v-for="(item, index) in classDataArr"
@@ -49,7 +50,7 @@
                 :key="index"
                 class="datalist"
               >
-                <img :src="item.image" alt="" class="item__img"/>
+                <img :src="item.image" alt="" class="item__img" @click="jump__details(item)"/>
                 <div>
                   <div class="item__name">{{ item.name }}</div>
                   <div class="item__price">
@@ -79,7 +80,8 @@ export default {
       classDataItem: [],
       idObj: "",
       datalist: [],
-      tabnumobj: 0
+      tabnumobj: 0,
+        activeObj: 0
     };
   },
   methods: {
@@ -99,6 +101,7 @@ export default {
     },
     switchclass(item, index) {
       this.tabnumobj = index;
+        this.activeObj = 0
       this.classDataAll.forEach(item => {
         if (this.classDataAll.indexOf(item) === index) {
           this.classDataItem = item;
@@ -119,7 +122,13 @@ export default {
           // console.log(this.classDataArr);
         }
       });
-    }
+    },
+      jump__details(item) {
+          this.$router.push({
+              name: "details",
+              query: {id: item.id}
+          })
+      }
   },
   mounted() {
     // this.classDataAll = JSON.parse(localStorage.getItem('category'))
