@@ -69,8 +69,45 @@
             v-if="detailData.goodsOne"
           ></span>
         </van-tab>
-        <van-tab title="商品评论">
-          内容 2
+        <van-tab title="商品评论" v-if="detailData.comment">
+           <div class="van__tab__comment" v-if="detailData.comment.length === 0">
+               暂无评论内容
+           </div>
+          <div class="van__tab__comment1" v-else-if="detailData.comment.length > 0">
+            <div v-for="(item,index) in detailData.comment" :key="index" class="detailData__comment__item">
+              <div class="detailData__comment__left" v-if="item.user">
+                <img :src="item.user[0].avatar" alt="" class="detailData__comment__avatar">
+                <div>
+                  <div>
+                    {{item.user[0].nickname}}
+                  </div>
+                  <div>
+                    <van-rate v-model="item.rate" :size="sizeObj" color="#f44" void-icon="star" void-color="#eee" class="commodity__rate"></van-rate>
+                  </div>
+                  <div>
+                    {{item.content}}
+                  </div>
+                </div>
+              </div>
+              <div class="detailData__comment__left" v-else>
+                <img :src="item.comment_avatar" alt="" class="detailData__comment__avatar">
+                <div>
+                  <div>
+                    {{item.comment_nickname}}
+                  </div>
+                  <div>
+                    <van-rate v-model="item.rate" :size="sizeObj" color="#f44" void-icon="star" void-color="#eee" class="commodity__rate"></van-rate>
+                  </div>
+                  <div>
+                    {{item.content}}
+                  </div>
+                </div>
+              </div>
+               <div class="detailData__comment__right">
+                 {{item.comment_time}}
+               </div>
+            </div>
+          </div>
         </van-tab>
       </van-tabs>
     </div>
@@ -81,6 +118,7 @@
           icon="shopping-cart-o"
           :info="info__Data"
           text="购物车"
+          @click="jump__shoppingCart"
         ></van-goods-action-icon>
         <van-goods-action-button
           type="warning"
@@ -140,6 +178,7 @@
           icon="shopping-cart-o"
           info="0"
           text="购物车"
+          @click="jump__shoppingCart"
         ></van-goods-action-icon>
         <van-goods-action-button
           type="warning"
@@ -213,7 +252,9 @@ export default {
       checkCollect: 0,
       show: false,
       valueObj: 1,
-      disabled: true
+      disabled: true,
+      sizeObj: 20,
+      recentBrowsingData: []
     };
   },
   methods: {
@@ -223,7 +264,10 @@ export default {
         .then(response => {
           if (response) {
             this.detailData = response.goods;
-            // console.log(this.detailData);
+            this.$store.state.recentBrowsingData.push(this.detailData.goodsOne)
+            this.recentBrowsingData.push(response.goods.goodsOne)
+            localStorage.setItem("recentBrowsingData",JSON.stringify(this.recentBrowsingData))
+            console.log(this.detailData);
           }
         })
         .catch(err => {
@@ -325,6 +369,8 @@ export default {
                 duration: 2000
               });
               this.getShoppingCard();
+              this.$store.state.shopping_Cart2.push(this.goodsId)
+              console.log(this.$store.state.shopping_Cart2);
               console.log(this.$store.state.shopping_Cart1);
               console.log(response);
             }
@@ -344,6 +390,7 @@ export default {
           query: { details_login: this.details_login, id: this.goodsId }
         });
       } else if (this.$store.state.user) {
+        this.$store.state.shopping_Cart.push(this.goodsId)
         this.$router.push({
           name: "orderSettlement",
           query: {
@@ -367,6 +414,9 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    jump__shoppingCart() {
+      this.$router.push({name: "shoppingCart"})
     }
   },
   mounted() {
@@ -380,6 +430,10 @@ export default {
     }
     this.getDetailsData();
     this.getShoppingCard();
+    if (localStorage.recentBrowsingData) {
+      this.recentBrowsingData = JSON.parse(localStorage.getItem("recentBrowsingData"))
+      // console.log(JSON.parse(localStorage.getItem("recentBrowsingData")))
+    }
   },
   created() {
     this.$nextTick(() => {
@@ -403,7 +457,7 @@ export default {
 <style scoped lang="scss">
 .details__body {
   width: 100vw;
-  height: 100vh;
+  padding-bottom: 100px;
 }
 .detail__return {
   width: 60px;
@@ -476,6 +530,21 @@ export default {
 .detail__shop__comment {
   width: 100vw;
   margin-top: 60px;
+}
+.van__tab__comment {
+  text-align: center;
+  font-size: 30px;
+}
+.detailData__comment__item {
+   display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.detailData__comment__avatar {
+  height: 100px;
+}
+.detailData__comment__left {
+  display: flex;
 }
 .detail__add__cart {
   width: 100vw;

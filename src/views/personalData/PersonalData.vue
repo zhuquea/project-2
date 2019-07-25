@@ -173,6 +173,7 @@ export default {
         year: this.$store.state.user.year,
         id: this.$store.state.user._id
       }
+      console.log(UserData);
       axios
         .post("api/saveUser", UserData )
         .then(response => {

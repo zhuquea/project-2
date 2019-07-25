@@ -12,153 +12,234 @@
             v-model="value"
             placeholder="请输入搜索关键词"
             show-action
-            @search="onSearch"
+            @keydown.delete="deleteReturn"
+            @focus="FocusObj"
+            @blur="BlurObj"
           >
-            <div slot="action" @click="onSearch" class="first__search">
+            <div
+              slot="action"
+              @click="onSearch"
+              class="first__search"
+              v-if="hiddenHome === false"
+            >
               搜索
+            </div>
+            <div
+              slot="action"
+              @click="onSearch2"
+              class="first__search"
+              v-else-if="hiddenHome === true"
+            >
+              取消
             </div>
           </van-search>
         </div>
       </div>
-      <div v-if="HomeData.advertesPicture">
-        <van-swipe :autoplay="2000" indicator-color="white">
-          <van-swipe-item v-for="(item, index) in HomeData.slides" :key="index"
-            ><img :src="item.image" alt="" class="Rotary_Planting_Map"
-          /></van-swipe-item>
-        </van-swipe>
-        <div class="Home__category">
-          <div
-            v-for="(item, index) in HomeData.category"
-            :key="index"
-            class="category__item"
-            @click="jump__class(item)"
-          >
-            <img :src="item.image" alt="" class="category__img" />
-            <div>{{ item.mallCategoryName }}</div>
-          </div>
-        </div>
-        <img
-          :src="HomeData.advertesPicture.PICTURE_ADDRESS"
-          alt=""
-          class="imgtu"
-        />
-      </div>
-      <div class="recomend">商品推荐</div>
-      <div ref="personWrap" class="recommend__wrap">
-        <div class="recommend__shop">
-          <div
-            v-for="(item, index) in HomeData.recommend"
-            :key="index"
-            class="recommend__item"
-          >
-            <img :src="item.image" alt="" class="recommend__img" @click="jump__details(item)"/>
-            <div class="recommend__goodsname">{{ item.goodsName }}</div>
-            <div>
-              <span class="recommend__price">{{ item.price }}</span>
-              <span class="recomend__mallPrice">{{ item.mallPrice }}</span>
-            </div>
-            <div class="recomend__footer">
-              <span class="recommend__cart"><van-icon name="cart"/></span>
-              <span class="recommend__check" @click="jump__details(item)">查看详情</span>
+      <HomeSearch
+        v-if="hiddenHome === true"
+        :searchData="searchData"
+        @getHistory="getHistory"
+      ></HomeSearch>
+      <div v-else-if="hiddenHome === false">
+        <div v-if="HomeData.advertesPicture">
+          <van-swipe :autoplay="2000" indicator-color="white">
+            <van-swipe-item
+              v-for="(item, index) in HomeData.slides"
+              :key="index"
+              ><img :src="item.image" alt="" class="Rotary_Planting_Map"
+            /></van-swipe-item>
+          </van-swipe>
+          <div class="Home__category">
+            <div
+              v-for="(item, index) in HomeData.category"
+              :key="index"
+              class="category__item"
+              @click="jump__class(item)"
+            >
+              <img :src="item.image" alt="" class="category__img" />
+              <div>{{ item.mallCategoryName }}</div>
             </div>
           </div>
+          <img
+            :src="HomeData.advertesPicture.PICTURE_ADDRESS"
+            alt=""
+            class="imgtu"
+          />
         </div>
-      </div>
-      <div class="snacks" v-if="HomeData.floorName">
-        <span class="snacks__1F">1F</span>
-        <span class="snacks__content">{{ HomeData.floorName.floor1 }}</span>
-      </div>
-      <div class="snacks2">
-        <div v-if="HomeData.floor1" class="snacks2__1">
-          <img :src="HomeData.floor1[0].image" alt="" class="snacks2__0__img" @click="jump__details0(HomeData.floor1[0].goodsId)"/>
-          <div>
-            <img
-              :src="HomeData.floor1[1].image"
-              alt=""
-              class="snacks2__1__img"
-              @click="jump__details0(HomeData.floor1[1].goodsId)"
-            />
-            <img
-              :src="HomeData.floor1[2].image"
-              alt=""
-              class="snacks2__1__img"
-              @click="jump__details0(HomeData.floor1[2].goodsId)"
-            />
-          </div>
-        </div>
-        <div v-if="HomeData.floor1" class="snacks2__1">
-          <img :src="HomeData.floor1[3].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor1[3].goodsId)"/>
-          <img :src="HomeData.floor1[4].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor1[4].goodsId)"/>
-        </div>
-      </div>
-      <div class="snacks" v-if="HomeData.floorName">
-        <span class="snacks__1F">2F</span>
-        <span class="snacks__content">{{ HomeData.floorName.floor2 }}</span>
-      </div>
-      <div class="snacks2">
-        <div v-if="HomeData.floor2" class="snacks2__1">
-          <img :src="HomeData.floor2[0].image" alt="" class="snacks2__0__img" @click="jump__details0(HomeData.floor2[0].goodsId)"/>
-          <div>
-            <img
-              :src="HomeData.floor2[1].image"
-              alt=""
-              class="snacks2__1__img"
-              @click="jump__details0(HomeData.floor2[1].goodsId)"
-            />
-            <img
-              :src="HomeData.floor2[2].image"
-              alt=""
-              class="snacks2__1__img"
-              @click="jump__details0(HomeData.floor2[2].goodsId)"
-            />
-          </div>
-        </div>
-        <div v-if="HomeData.floor2" class="snacks2__1">
-          <img :src="HomeData.floor2[3].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor2[3].goodsId)"/>
-          <img :src="HomeData.floor2[4].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor2[4].goodsId)"/>
-        </div>
-      </div>
-      <div class="snacks" v-if="HomeData.floorName">
-        <span class="snacks__1F">3F</span>
-        <span class="snacks__content">{{ HomeData.floorName.floor3 }}</span>
-      </div>
-      <div class="snacks2">
-        <div v-if="HomeData.floor3" class="snacks2__1">
-          <img :src="HomeData.floor3[0].image" alt="" class="snacks2__0__img" @click="jump__details0(HomeData.floor3[0].goodsId)"/>
-          <div>
-            <img
-              :src="HomeData.floor3[1].image"
-              alt=""
-              class="snacks2__1__img"
-              @click="jump__details0(HomeData.floor3[1].goodsId)"
-            />
-            <img
-              :src="HomeData.floor3[2].image"
-              alt=""
-              class="snacks2__1__img"
-              @click="jump__details0(HomeData.floor3[2].goodsId)"
-            />
-          </div>
-        </div>
-        <div v-if="HomeData.floor3" class="snacks2__1">
-          <img :src="HomeData.floor3[3].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor3[3].goodsId)"/>
-          <img :src="HomeData.floor3[4].image" alt="" class="snacks2__2__img" @click="jump__details0(HomeData.floor3[4].goodsId)"/>
-        </div>
-      </div>
-      <div class="snacks">
-        <span class="snacks__content">热销商品</span>
-        <div class="hot__shop">
-          <div
-            v-for="(item, index) in HomeData.hotGoods"
-            :key="index"
-            class="hot__item"
-          >
-            <img :src="item.image" alt="" class="hot__img" @click="jump__details(item)"/>
-            <div class="hot__footer">
-              <div class="hot__goodsname">{{ item.name }}</div>
+        <div class="recomend">商品推荐</div>
+        <div ref="personWrap" class="recommend__wrap">
+          <div class="recommend__shop">
+            <div
+              v-for="(item, index) in HomeData.recommend"
+              :key="index"
+              class="recommend__item"
+            >
+              <img
+                :src="item.image"
+                alt=""
+                class="recommend__img"
+                @click="jump__details(item)"
+              />
+              <div class="recommend__goodsname">{{ item.goodsName }}</div>
               <div>
-                <span class="hot__price">￥{{ item.price }}</span>
-                <span class="hot__mallPrice">￥{{ item.mallPrice }}</span>
+                <span class="recommend__price">{{ item.price }}</span>
+                <span class="recomend__mallPrice">{{ item.mallPrice }}</span>
+              </div>
+              <div class="recomend__footer">
+                <span class="recommend__cart"><van-icon name="cart"/></span>
+                <span class="recommend__check" @click="jump__details(item)"
+                  >查看详情</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="snacks" v-if="HomeData.floorName">
+          <span class="snacks__1F">1F</span>
+          <span class="snacks__content">{{ HomeData.floorName.floor1 }}</span>
+        </div>
+        <div class="snacks2">
+          <div v-if="HomeData.floor1" class="snacks2__1">
+            <img
+              :src="HomeData.floor1[0].image"
+              alt=""
+              class="snacks2__0__img"
+              @click="jump__details0(HomeData.floor1[0].goodsId)"
+            />
+            <div>
+              <img
+                :src="HomeData.floor1[1].image"
+                alt=""
+                class="snacks2__1__img"
+                @click="jump__details0(HomeData.floor1[1].goodsId)"
+              />
+              <img
+                :src="HomeData.floor1[2].image"
+                alt=""
+                class="snacks2__1__img"
+                @click="jump__details0(HomeData.floor1[2].goodsId)"
+              />
+            </div>
+          </div>
+          <div v-if="HomeData.floor1" class="snacks2__1">
+            <img
+              :src="HomeData.floor1[3].image"
+              alt=""
+              class="snacks2__2__img"
+              @click="jump__details0(HomeData.floor1[3].goodsId)"
+            />
+            <img
+              :src="HomeData.floor1[4].image"
+              alt=""
+              class="snacks2__2__img"
+              @click="jump__details0(HomeData.floor1[4].goodsId)"
+            />
+          </div>
+        </div>
+        <div class="snacks" v-if="HomeData.floorName">
+          <span class="snacks__1F">2F</span>
+          <span class="snacks__content">{{ HomeData.floorName.floor2 }}</span>
+        </div>
+        <div class="snacks2">
+          <div v-if="HomeData.floor2" class="snacks2__1">
+            <img
+              :src="HomeData.floor2[0].image"
+              alt=""
+              class="snacks2__0__img"
+              @click="jump__details0(HomeData.floor2[0].goodsId)"
+            />
+            <div>
+              <img
+                :src="HomeData.floor2[1].image"
+                alt=""
+                class="snacks2__1__img"
+                @click="jump__details0(HomeData.floor2[1].goodsId)"
+              />
+              <img
+                :src="HomeData.floor2[2].image"
+                alt=""
+                class="snacks2__1__img"
+                @click="jump__details0(HomeData.floor2[2].goodsId)"
+              />
+            </div>
+          </div>
+          <div v-if="HomeData.floor2" class="snacks2__1">
+            <img
+              :src="HomeData.floor2[3].image"
+              alt=""
+              class="snacks2__2__img"
+              @click="jump__details0(HomeData.floor2[3].goodsId)"
+            />
+            <img
+              :src="HomeData.floor2[4].image"
+              alt=""
+              class="snacks2__2__img"
+              @click="jump__details0(HomeData.floor2[4].goodsId)"
+            />
+          </div>
+        </div>
+        <div class="snacks" v-if="HomeData.floorName">
+          <span class="snacks__1F">3F</span>
+          <span class="snacks__content">{{ HomeData.floorName.floor3 }}</span>
+        </div>
+        <div class="snacks2">
+          <div v-if="HomeData.floor3" class="snacks2__1">
+            <img
+              :src="HomeData.floor3[0].image"
+              alt=""
+              class="snacks2__0__img"
+              @click="jump__details0(HomeData.floor3[0].goodsId)"
+            />
+            <div>
+              <img
+                :src="HomeData.floor3[1].image"
+                alt=""
+                class="snacks2__1__img"
+                @click="jump__details0(HomeData.floor3[1].goodsId)"
+              />
+              <img
+                :src="HomeData.floor3[2].image"
+                alt=""
+                class="snacks2__1__img"
+                @click="jump__details0(HomeData.floor3[2].goodsId)"
+              />
+            </div>
+          </div>
+          <div v-if="HomeData.floor3" class="snacks2__1">
+            <img
+              :src="HomeData.floor3[3].image"
+              alt=""
+              class="snacks2__2__img"
+              @click="jump__details0(HomeData.floor3[3].goodsId)"
+            />
+            <img
+              :src="HomeData.floor3[4].image"
+              alt=""
+              class="snacks2__2__img"
+              @click="jump__details0(HomeData.floor3[4].goodsId)"
+            />
+          </div>
+        </div>
+        <div class="snacks">
+          <span class="snacks__content">热销商品</span>
+          <div class="hot__shop">
+            <div
+              v-for="(item, index) in HomeData.hotGoods"
+              :key="index"
+              class="hot__item"
+            >
+              <img
+                :src="item.image"
+                alt=""
+                class="hot__img"
+                @click="jump__details(item)"
+              />
+              <div class="hot__footer">
+                <div class="hot__goodsname">{{ item.name }}</div>
+                <div>
+                  <span class="hot__price">￥{{ item.price }}</span>
+                  <span class="hot__mallPrice">￥{{ item.mallPrice }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -169,29 +250,53 @@
 </template>
 
 <script>
+import HomeSearch from "../components/HomeSearch";
 import BScroll from "better-scroll";
 export default {
   name: "Home",
-  components: {},
+  components: {
+    HomeSearch
+  },
   props: {},
   data() {
     return {
       value: "",
       HomeData: {},
-      category: []
+      category: [],
+      searchData: [],
+      hiddenHome: false,
+      searchHistoryData: []
     };
   },
   methods: {
+    FocusObj() {
+      this.hiddenHome = true;
+    },
+    BlurObj() {
+      this.hiddenHome = false;
+      this.searchHistoryData.push(this.value);
+      localStorage.setItem(
+        "searchHistory",
+        JSON.stringify(this.searchHistoryData)
+      );
+    },
+    deleteReturn() {},
     onSearch() {},
+    onSearch2() {
+      this.hiddenHome = false;
+    },
+    getHistory(data) {
+      this.value = data;
+    },
     getrecommend() {
       this.$axios
         .req("api//recommend")
         .then(response => {
           if (response) {
             this.HomeData = response.data;
-            this.category = this.HomeData.category
+            this.category = this.HomeData.category;
             // localStorage.setItem('category',JSON.stringify(this.category))
-            this.$store.state.category = this.category
+            this.$store.state.category = this.category;
             console.log(this.HomeData);
           }
         })
@@ -229,25 +334,31 @@ export default {
     jump__class(item) {
       this.$router.push({
         name: "classification",
-        query: {bxMallSubDto: item.bxMallSubDto ,index: this.HomeData.category.indexOf(item) ,categroy: this.HomeData.category}
+        query: {
+          bxMallSubDto: item.bxMallSubDto,
+          index: this.HomeData.category.indexOf(item),
+          categroy: this.HomeData.category
+        }
       });
     },
-    jump__details (item) {
-      this.$store.state.shopping_Cart.push(item.goodsId)
+    jump__details(item) {
+      this.$store.state.shopping_Cart = [];
       this.$router.push({
         name: "details",
-        query: {id: item.goodsId}
-      })
+        query: { id: item.goodsId }
+      });
     },
-    jump__details0 (id) {
+    jump__details0(id) {
+      this.$store.state.shopping_Cart = [];
       this.$router.push({
         name: "details",
-        query: {id: id}
-      })
-    },
+        query: { id: id }
+      });
+    }
   },
   mounted() {
     this.getrecommend();
+    this.searchHistoryData = JSON.parse(localStorage.getItem("searchHistory"));
   },
   created() {
     this.$nextTick(() => {
@@ -257,7 +368,40 @@ export default {
   },
   filters: {},
   computed: {},
-  watch: {},
+  watch: {
+    value(val) {
+      console.log(val);
+      this.$axios
+        .req("api/search", { value: val })
+        .then(response => {
+          if (response.code === 200) {
+            this.searchData = response.data.list;
+            this.searchData = this.searchData.filter(item => {
+              return JSON.stringify(item).indexOf(val) !== -1;
+            });
+            this.searchData.forEach((item, index) => {
+              if (val && val.length > 0) {
+                let replaceReg = new RegExp(val, "g");
+                let replaceString =
+                  '<span class="search-text">' + val + "</span>";
+                this.searchData[index].name = item.name.replace(
+                  replaceReg,
+                  replaceString
+                );
+              }
+            });
+            console.log(this.searchData);
+            console.log(response.data);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      if (val === "") {
+        this.searchData = [];
+      }
+    }
+  },
   directives: {}
 };
 </script>
@@ -437,5 +581,13 @@ export default {
   margin-left: 20px;
   font-size: 25px;
   text-decoration: line-through;
+}
+.hidden__search__item {
+  text-indent: 2em;
+  line-height: 70px;
+  font-size: 30px;
+}
+.search-text {
+  color: red;
 }
 </style>

@@ -32,17 +32,17 @@
         <van-icon name="logistics" size="25px"/>
         <div>待收货</div>
       </div>
-      <div>
-        <van-icon name="records" info="0" size="25px"/>
+      <div @click="jump__evaluation">
+        <van-icon name="records" :info="evaluate" size="25px"/>
         <div>评价</div>
       </div>
-      <div>
+      <div @click="jump__Order">
         <van-icon name="points" size="25px"/>
         <div>已完成</div>
       </div>
     </div>
     <div class="my__fourth">
-     <div class="fourth__left">
+     <div class="fourth__left" @click="jump__Order">
        <van-icon name="orders-o" size="25px"/>全部订单
      </div>
       <div class="fourth__right">
@@ -51,7 +51,7 @@
     </div>
     <div class="my__fifth">
       <div class="fifth__item">
-        <div class="fourth__left">
+        <div class="fourth__left" @click="jump__mycollection">
           <van-icon name="points" size="25px"/>收藏商品
         </div>
         <div class="fourth__right">
@@ -67,7 +67,7 @@
         </div>
       </div>
       <div class="fifth__item">
-        <div class="fourth__left">
+        <div class="fourth__left" @click="jump__recentBrowsing">
           <van-icon name="description" size="25px"/>最近浏览
         </div>
         <div class="fourth__right">
@@ -85,7 +85,9 @@ export default {
   props: {},
   data() {
     return {
-      active: 0
+      active: 0,
+      alreadyData: [],
+      tobeData: []
     };
   },
   methods: {
@@ -95,12 +97,13 @@ export default {
         .then(response => {
           if (response) {
             localStorage.removeItem("user");
+            localStorage.removeItem("recentBrowsingData")
             this.$store.state.user = "";
             this.$store.state.userData = "";
             this.$store.state.details_login = true;
             console.log(this.userInfo);
             console.log(response);
-           this.$store.state.showOut = !this.$store.state.showOut
+            this.$store.state.showOut = !this.$store.state.showOut
           }
         })
         .catch(err => {
@@ -127,10 +130,44 @@ export default {
     jump__AddressList() {
       this.$store.state.returnMember = true
       this.$router.push({name: "addressList"})
+    },
+    jump__evaluation() {
+      this.$router.push({name: "evaluation"})
+    },
+    jump__mycollection() {
+      this.$router.push({name: "myCollection"})
+    },
+    jump__Order() {
+      this.$router.push({name: "orderQuery"})
+    },
+    getAlreadyMem() {
+      this.$axios.req("api/alreadyEvaluated").then((response) => {
+        if (response) {
+          this.alreadyData = response.data.list
+          console.log(this.alreadyData);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+    getTobeMem() {
+      this.$axios.req("api/tobeEvaluated").then((response) => {
+        if (response) {
+          this.tobeData = response.data.list
+          console.log(this.tobeData);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+    jump__recentBrowsing() {
+      this.$router.push({name: "recentBrowsing"})
     }
   },
   mounted() {
     this.getUserData()
+    this.getAlreadyMem()
+    this.getTobeMem()
   },
   created() {},
   filters: {},
@@ -140,6 +177,10 @@ export default {
     },
     showOut () {
       return this.$store.state.showOut
+    },
+    evaluate() {
+      let Num = parseInt(this.alreadyData.length + this.tobeData.length)
+      return Num
     }
   },
   watch: {},

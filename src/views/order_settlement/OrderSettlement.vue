@@ -32,7 +32,10 @@
       </div>
       <img src="../../picture/caitiao.jpg" alt="" class="second__2" />
     </div>
-    <div class="order__settlement__third">
+    <div
+      class="order__settlement__third"
+      v-if="orderData && ShoppingCart.length === 0"
+    >
       <div class="third__left">
         <img :src="orderData.image" alt="" class="third__image" />
       </div>
@@ -42,11 +45,37 @@
       </div>
       <div class="third__number">×{{ valueObj }}</div>
     </div>
-    <div class="order__settlement__fourth">
+    <div v-else-if="ShoppingCart.length > 0">
+      <div
+        class="order__settlement__third"
+        v-for="(item, index) in ShoppingCart"
+        :key="index"
+      >
+        <div class="third__left">
+          <img :src="item.image_path" alt="" class="third__image" />
+        </div>
+        <div class="third__right">
+          <div class="third__name">{{ item.name }}</div>
+          <div class="third__price">￥{{ item.present_price }}</div>
+        </div>
+        <div class="third__number">×{{ item.count }}</div>
+      </div>
+    </div>
+    <div
+      class="order__settlement__fourth"
+      v-if="orderData && ShoppingCart.length === 0"
+    >
       <van-submit-bar
         :price="total"
         button-text="提交订单"
         @submit="onSubmit"
+      ></van-submit-bar>
+    </div>
+    <div class="order__settlement__fourth" v-else-if="ShoppingCart.length > 0">
+      <van-submit-bar
+        :price="total2"
+        button-text="提交订单"
+        @submit="onSubmit2"
       ></van-submit-bar>
     </div>
   </div>
@@ -64,12 +93,22 @@ export default {
       idOrder: "",
       orderData: {},
       valueObj: 1,
-      defaultAddress: {}
+      defaultAddress: {},
+      ShoppingCart: []
     };
   },
   methods: {
     orderSettleReturn() {
-      this.$router.push({ name: "details", query: { idOrder: this.idOrder } });
+      if (this.$store.state.returnShoppingCart === false) {
+        this.$router.push({
+          name: "details",
+          query: { idOrder: this.idOrder }
+        });
+        this.$store.state.shopping_Cart = [];
+      } else if (this.$store.state.returnShoppingCart === true) {
+        this.$store.state.returnShoppingCart = false;
+        this.$router.push({ name: "shoppingCart" });
+      }
     },
     onSubmit() {
       if (!this.defaultAddress) {
@@ -83,7 +122,7 @@ export default {
           .post("api/order", {
             address: this.defaultAddress.address,
             tel: this.defaultAddress.tel,
-             orderId:this.$store.state.shopping_Cart,
+            orderId: this.$store.state.shopping_Cart,
             totalPrice: this.total,
             count: this.valueObj,
             idDirect: true
@@ -91,10 +130,11 @@ export default {
           .then(response => {
             if (response) {
               Toast({
-                message: "结算成功，一共" + this.total/100 + "元",
+                message: "结算成功，一共" + this.total / 100 + "元",
                 type: "success",
                 duration: 2000
               });
+              this.$store.state.shopping_Cart = [];
               console.log(response);
             }
           })
@@ -122,6 +162,53 @@ export default {
     },
     jump__addressList() {
       this.$router.push({ name: "addressList" });
+    },
+    getShoppingCart() {
+      this.$axios
+        .req("api/getCard", {})
+        .then(response => {
+          if (response) {
+            this.ShoppingCart = response.shopList;
+            console.log(this.ShoppingCart);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    onSubmit2() {
+      if (!this.defaultAddress) {
+        Toast({
+          message: "请添加收货地址",
+          type: "fail",
+          duration: 2000
+        });
+      } else if (this.defaultAddress) {
+        axios
+          .post("api/order", {
+            address: this.defaultAddress.address,
+            tel: this.defaultAddress.tel,
+            orderId: this.$store.state.shopping_Cart2,
+            totalPrice: this.total2,
+            count: this.allCount,
+            idDirect: false
+          })
+          .then(response => {
+            if (response) {
+              Toast({
+                message: "结算成功，一共" + this.total2 / 100 + "元",
+                type: "success",
+                duration: 2000
+              });
+              this.$store.state.shopping_Cart = [];
+              this.$store.state.shopping_Cart2 = [];
+              console.log(response);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
     }
   },
   mounted() {
@@ -147,13 +234,34 @@ export default {
       this.$store.state.valueObj = this.$route.query.valueObj1;
     }
     console.log(this.orderData);
+    console.log(this.$store.state.shopping_Cart);
+    console.log(this.$store.state.shopping_Cart2);
     this.getDefaultAddress();
+    if (this.$store.state.to_orderSettle === true) {
+      this.getShoppingCart();
+      this.$store.state.to_orderSettle = false;
+      this.$store.state.to_orderSettle2 = true
+    }
   },
   created() {},
   filters: {},
   computed: {
     total() {
       return this.valueObj * this.orderData.present_price * 100;
+    },
+    total2() {
+      let summation = 0;
+      this.ShoppingCart.forEach(item => {
+        summation = summation + item.count * item.present_price;
+      });
+      return summation * 100;
+    },
+    allCount() {
+      let allcount = 0;
+      this.ShoppingCart.forEach(item => {
+        allcount = allcount + item.count;
+      });
+      return allcount;
     }
   },
   watch: {},
@@ -201,12 +309,15 @@ export default {
   margin-top: 20px;
   display: flex;
   align-items: center;
+  position: relative;
 }
 .third__right {
   margin-left: 20px;
 }
 .third__number {
-  margin-left: 100px;
+  position: absolute;
+  top: 100px;
+  right: 20px;
   font-size: 30px;
 }
 .third__image {

@@ -51,14 +51,20 @@ export default {
   methods: {
     addressReturn() {
       if (this.$store.state.returnMember === false) {
-        this.$router.push({
-          name: "orderSettlement",
-          query: {
-            idOrder1: this.$store.state.idOrder,
-            orderData1: this.$store.state.orderData,
-            valueObj1: this.$store.state.valueObj
-          }
-        });
+        if (this.$store.state.to_orderSettle2 === true) {
+             this.$router.push({name: "orderSettlement"})
+          this.$store.state.to_orderSettle = true
+          this.$store.state.to_orderSettle2 = false
+        }else if (this.$store.state.to_orderSettle2 === false) {
+          this.$router.push({
+            name: "orderSettlement",
+            query: {
+              idOrder1: this.$store.state.idOrder,
+              orderData1: this.$store.state.orderData,
+              valueObj1: this.$store.state.valueObj
+            }
+          });
+        }
       } else if (this.$store.state.returnMember) {
         this.$store.state.returnMember = false;
         this.$router.push({ name: "membership" });

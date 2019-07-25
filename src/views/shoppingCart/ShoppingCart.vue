@@ -26,11 +26,13 @@
           <div>请确认订单</div>
         </div>
       </div>
-      <div class="shopping__cart__third">
-        <van-button type="danger" class="third__delete" @click="delete__Data">删除</van-button>
-        <van-button type="info" class="third__settlement">去结算</van-button>
+      <div class="shopping__cart__third" v-show="showDiv === true">
+        <van-button type="danger" class="third__delete" @click="delete__Data"
+          >删除</van-button
+        >
+        <van-button type="info" class="third__settlement" @click="to__settlement">去结算</van-button>
       </div>
-      <div class="shopping__cart__fourth">
+      <div class="shopping__cart__fourth" v-if="shopping_Cart.length > 0">
         <div
           v-for="(item, index) in shopping_Cart"
           :key="item.id"
@@ -60,13 +62,17 @@
           ></van-stepper>
         </div>
       </div>
+      <div class="no__Something" v-else-if="shopping_Cart.length === 0">
+           你还没有购买任何商品，欢迎去商城选购
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-    import { Dialog } from 'vant';
-    import axios from "axios"
+import { Dialog } from "vant";
+import axios from "axios";
+import { Toast } from "vant";
 export default {
   name: "ShoppingCart",
   components: {},
@@ -74,9 +80,10 @@ export default {
   data() {
     return {
       shopping_Cart: [],
-        deleteID: [],
+      deleteID: [],
       inputObj: true,
-      allElection: false
+      allElection: false,
+      showDiv: false
     };
   },
   methods: {
@@ -102,10 +109,12 @@ export default {
         this.shopping_Cart.forEach(item => {
           item.check = true;
         });
+        this.showDiv = true
       } else if (this.allElection === false) {
         this.shopping_Cart.forEach(item => {
           item.check = false;
         });
+        this.showDiv = false
       }
     },
     reverseElection() {
@@ -120,6 +129,11 @@ export default {
       } else {
         this.allElection = false;
       }
+      this.shopping_Cart.forEach((item) => {
+        if (item.check === true) {
+          this.showDiv = true
+        }
+      })
     },
     onChange(item) {
       this.$axios
@@ -137,28 +151,43 @@ export default {
           console.log(err);
         });
     },
-      delete__Data() {
-          Dialog.confirm({
-              title: '删除操作',
-              message: '确认要删除选种商品吗'
-          }).then(() => {
-              this.shopping_Cart.forEach((item) => {
-                  if (item.check === true) {
-                      this.deleteID.push(item.cid)
-                  }
-              })
-              axios.post("api/deleteShop",{id: this.deleteID}).then((response) => {
-                  if (response) {
-                      this.getShoppingCard();
-                      console.log(response);
-                  }
-              }).catch((err) => {
-                  console.log(err);
-              })
-          }).catch(() => {
-              // on cancel
+    delete__Data() {
+      Dialog.confirm({
+        title: "删除操作",
+        message: "确认要删除选种商品吗"
+      })
+        .then(() => {
+          this.shopping_Cart.forEach(item => {
+            if (item.check === true) {
+              this.deleteID.push(item.cid);
+            }
           });
-      }
+          axios
+            .post("api/deleteShop", this.deleteID)
+            .then(response => {
+              if (response) {
+                Toast({
+                  message: "删除成功",
+                  type: "success",
+                  duration: 2000
+                });
+                this.getShoppingCard();
+                console.log(response);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(() => {
+          // on cancel
+        });
+    },
+    to__settlement() {
+      this.$store.state.to_orderSettle = true
+      this.$store.state.returnShoppingCart = true
+      this.$router.push({name: "orderSettlement"})
+    }
   },
   mounted() {
     this.getShoppingCard();
@@ -272,4 +301,12 @@ export default {
   bottom: 20px;
   right: 50px;
 }
+  .no__Something {
+    width: 100vw;
+    line-height: 100px;
+    margin-top: 200px;
+    font-size: 40px;
+    color: #7dd2d9;
+    text-align: center;
+  }
 </style>

@@ -106,6 +106,60 @@ const router = new Router({
         title: "购物车",
         showFooter: true
       }
+    },
+    {
+      path: "/evaluation",
+      name: "evaluation",
+      component: () => import("../views/evaluation_Center/EvaluationCenter.vue"),
+      meta: {
+        title: "评价中心",
+        showFooter: false
+      }
+    },
+    {
+      path: "/myCollection",
+      name: "myCollection",
+      component: () => import("../views/myCollection/MyCollection.vue"),
+      meta: {
+        title: "我的收藏",
+        showFooter: false
+      }
+    },
+    {
+      path: "/orderQuery",
+      name: "orderQuery",
+      component: () => import("../views/orderQuery/OrderQuery.vue"),
+      meta: {
+        title: "我的订单",
+        showFooter: false
+      }
+    },
+    {
+      path: "/toEvaluate",
+      name: "toEvaluate",
+      component: () => import("../views/toEvaluate/ToEvaluate.vue"),
+      meta: {
+        title: "评价商品",
+        showFooter: false
+      }
+    },
+    {
+      path: "/evaluateDetails",
+      name: "evaluateDetails",
+      component: () => import("../views/evaluateDetails/EvaluateDetails.vue"),
+      meta: {
+        title: "评价详情",
+        showFooter: false
+      }
+    },
+    {
+      path: "/recentBrowsing",
+      name: "recentBrowsing",
+      component: () => import("../views/recentBrowsing/RecentBrowsing.vue"),
+      meta: {
+        title: "最近浏览",
+        showFooter: false
+      }
     }
   ]
 });

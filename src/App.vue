@@ -16,6 +16,16 @@ export default {
       tabnum: 0
     };
   },
+  mounted() {
+    if (!localStorage.getItem("recentBrowsingData")) {
+      let arr = [];
+      localStorage.setItem("recentBrowsingData", JSON.stringify(arr));
+    }
+    if (!localStorage.getItem("searchHistory")) {
+      let arr1 = [];
+      localStorage.setItem("searchHistory", JSON.stringify(arr1));
+    }
+  },
   watch: {
     $route(to) {
       if (to.path === "/classification") {
@@ -35,6 +45,9 @@ export default {
 * {
   margin: 0;
   padding: 0;
+}
+.search-text {
+  color: red;
 }
 @import "./style/common";
 </style>
