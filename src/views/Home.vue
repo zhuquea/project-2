@@ -2,10 +2,9 @@
   <div class="home__body" ref="personWrap2">
     <div>
       <div class="First">
-        <div class="app1">
-          <select name="" id="">
-            <option value="">成都市</option>
-          </select>
+        <div class="app1" @click="jump__city">
+          <span class="app1__city">{{CityData}}</span>
+          <van-icon name="location" size="20px" />
         </div>
         <div class="app2">
           <van-search
@@ -86,7 +85,9 @@
                 <span class="recomend__mallPrice">{{ item.mallPrice }}</span>
               </div>
               <div class="recomend__footer">
-                <span class="recommend__cart"><van-icon name="cart"/></span>
+                <span class="recommend__cart" @click="add__shopping__cart(item)"
+                  ><van-icon name="cart"
+                /></span>
                 <span class="recommend__check" @click="jump__details(item)"
                   >查看详情</span
                 >
@@ -250,6 +251,7 @@
 </template>
 
 <script>
+import { Toast } from "vant";
 import HomeSearch from "../components/HomeSearch";
 import BScroll from "better-scroll";
 export default {
@@ -269,16 +271,23 @@ export default {
     };
   },
   methods: {
+    jump__city() {
+      this.$router.push({ name: "cityList" });
+    },
     FocusObj() {
       this.hiddenHome = true;
     },
     BlurObj() {
       this.hiddenHome = false;
-      this.searchHistoryData.push(this.value);
-      localStorage.setItem(
-        "searchHistory",
-        JSON.stringify(this.searchHistoryData)
-      );
+      if (localStorage.getItem("searchHistory")) {
+        this.searchHistoryData.push(this.value);
+      }
+      if (this.searchHistoryData.length > 0) {
+        localStorage.setItem(
+          "searchHistory",
+          JSON.stringify(this.searchHistoryData)
+        );
+      }
     },
     deleteReturn() {},
     onSearch() {},
@@ -354,11 +363,38 @@ export default {
         name: "details",
         query: { id: id }
       });
+    },
+    add__shopping__cart(item) {
+      if (!this.$store.state.user) {
+        this.$router.push({
+          name: "login"
+        });
+      } else if (this.$store.state.user) {
+        this.$axios
+          .req("api/addShop", { id: item.goodsId })
+          .then(response => {
+            if (response.code === 200) {
+              Toast({
+                message: "加入购物车成功",
+                type: "success",
+                duration: 2000
+              });
+              this.$store.state.shopping_Cart2.push(item.goodsId);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
     }
   },
   mounted() {
     this.getrecommend();
-    this.searchHistoryData = JSON.parse(localStorage.getItem("searchHistory"));
+    if (localStorage.getItem("searchHistory")) {
+      this.searchHistoryData = JSON.parse(
+        localStorage.getItem("searchHistory")
+      );
+    }
   },
   created() {
     this.$nextTick(() => {
@@ -367,10 +403,13 @@ export default {
     });
   },
   filters: {},
-  computed: {},
+  computed: {
+    CityData() {
+      return this.$store.state.cityName
+    }
+  },
   watch: {
     value(val) {
-      console.log(val);
       this.$axios
         .req("api/search", { value: val })
         .then(response => {
@@ -391,7 +430,6 @@ export default {
               }
             });
             console.log(this.searchData);
-            console.log(response.data);
           }
         })
         .catch(err => {
@@ -418,8 +456,16 @@ export default {
   margin-left: 20px;
   align-items: center;
 }
+.app1 {
+  display: flex;
+  align-items: center;
+  width: 25vw;
+}
+.app1__city {
+  font-size: 30px;
+}
 .app2 {
-  width: 100%;
+  width: 75vw;
   margin-left: 20px;
 }
 .first__search {

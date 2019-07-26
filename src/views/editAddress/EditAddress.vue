@@ -10,15 +10,15 @@
     </div>
     <div class="edit__address__second">
       <van-address-edit
-              :area-list="areaList"
-              show-delete
-              show-set-default
-              show-search-result
-              :search-result="searchResult"
-              @save="onSave1"
-              @delete="onDelete"
-              v-if="this.$route.query.item"
-              :address-info="editItem"
+        :area-list="areaList"
+        show-delete
+        show-set-default
+        show-search-result
+        :search-result="searchResult"
+        @save="onSave1"
+        @delete="onDelete"
+        v-if="this.$route.query.item"
+        :address-info="editItem"
       ></van-address-edit>
       <van-address-edit
         :area-list="areaList"
@@ -29,15 +29,15 @@
         @save="onSave"
         @delete="onDelete"
         v-else
-        ></van-address-edit>
+      ></van-address-edit>
     </div>
   </div>
 </template>
 
 <script>
 import { Toast } from "vant";
-import axios from "axios"
-import areaList from './area'
+import axios from "axios";
+import areaList from "./area";
 export default {
   name: "EditAddress",
   components: {},
@@ -54,19 +54,21 @@ export default {
       this.$router.push({ name: "addressList" });
     },
     onSave(name) {
-        console.log(name);
-        let str = name.province + name.city + name.county+name.addressDetail
-      axios.post("api/address",{
-            name: name.name,
-            tel: name.tel,
-            isDefault: name.isDefault,
-            province: name.province,
-            city: name.city,
-            county: name.county,
-            addressDetail: name.addressDetail,
-            areaCode: name.areaCode,
-            address: str
-        }).then((response) => {
+      console.log(name);
+      let str = name.province + name.city + name.county + name.addressDetail;
+      axios
+        .post("api/address", {
+          name: name.name,
+          tel: name.tel,
+          isDefault: name.isDefault,
+          province: name.province,
+          city: name.city,
+          county: name.county,
+          addressDetail: name.addressDetail,
+          areaCode: name.areaCode,
+          address: str
+        })
+        .then(response => {
           if (response) {
             Toast({
               message: "添加地址成功",
@@ -76,54 +78,61 @@ export default {
             this.$router.push({ name: "addressList" });
             console.log(response);
           }
-        }).catch((err) => {
-          console.log(err);
         })
-        // this.$router.push({ name: "addressList" })
+        .catch(err => {
+          console.log(err);
+        });
+      // this.$router.push({ name: "addressList" })
     },
     onDelete() {
-      this.$axios.req("api/deleteAddress",{id:this.editItem._id}).then((response) => {
-        if (response) {
-          Toast("删除成功");
-          this.$router.push({ name: "addressList" });
-          console.log(response);
-        }
-      }).catch((err) => {
-        console.log(err);
-      })
+      this.$axios
+        .req("api/deleteAddress", { id: this.editItem._id })
+        .then(response => {
+          if (response) {
+            Toast("删除成功");
+            this.$router.push({ name: "addressList" });
+            console.log(response);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     onSave1(name) {
       console.log(name);
-      axios.post("api/address",{
-        name: name.name,
-        tel: name.tel,
-        isDefault: name.isDefault,
-        province: name.province,
-        city: name.city,
-        county: name.county,
-        addressDetail: name.addressDetail,
-        areaCode: name.areaCode,
-        address: name.address,
-        id: name._id
-      }).then((response) => {
-        if (response.code === 200) {
-          Toast({
-            message: "修改成功",
-            type: "success",
-            duration: 2000
-          });
-          this.$router.push({ name: "addressList" });
-          console.log(response);
-        }
-      }).catch((err) => {
-        console.log(err);
-      })
+      axios
+        .post("api/address", {
+          name: name.name,
+          tel: name.tel,
+          isDefault: name.isDefault,
+          province: name.province,
+          city: name.city,
+          county: name.county,
+          addressDetail: name.addressDetail,
+          areaCode: name.areaCode,
+          address: name.address,
+          id: name._id
+        })
+        .then(response => {
+          if (response.code === 200) {
+            Toast({
+              message: "修改成功",
+              type: "success",
+              duration: 2000
+            });
+            this.$router.push({ name: "addressList" });
+            console.log(response);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   mounted() {
-      this.areaList = areaList
+    this.areaList = areaList;
     if (this.$route.query.item) {
-      this.editItem = this.$route.query.item
+      this.editItem = this.$route.query.item;
     }
     console.log(this.editItem);
   },

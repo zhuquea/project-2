@@ -8,22 +8,27 @@
         最近浏览
       </div>
     </div>
-      <div class="recent__browsing__second">
-          <div v-for="(item,index) in recentBrowsingData" :key="index" class="browsing__second__item">
-              <img :src="item.image" alt="" class="browsing__second__img">
-              <div>
-                  <div class="second__item__name">
-                      {{item.name}}
-                  </div>
-                  <div class="second__item__price">
-                      ￥{{item.present_price}}
-                  </div>
-              </div>
-              <div class="second__item__delete" @click="deleteRecent__browsing(item,index)">
-                  ×
-              </div>
+    <div class="recent__browsing__second">
+      <div
+        v-for="(item, index) in recentBrowsingData"
+        :key="index"
+        class="browsing__second__item"
+      >
+        <img :src="item.image" alt="" class="browsing__second__img" />
+        <div>
+          <div class="second__item__name">
+            {{ item.name }}
           </div>
+          <div class="second__item__price">￥{{ item.present_price }}</div>
+        </div>
+        <div
+          class="second__item__delete"
+          @click="deleteRecent__browsing(item, index)"
+        >
+          ×
+        </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -34,30 +39,35 @@ export default {
   props: {},
   data() {
     return {
-        recentBrowsingData: []
+      recentBrowsingData: []
     };
   },
   methods: {
     recent__browsingReturn() {
       this.$router.push({ name: "membership" });
     },
-      deleteRecent__browsing(item,index) {
-       this.recentBrowsingData.splice(index,1)
-          localStorage.setItem("recentBrowsingData",JSON.stringify(this.recentBrowsingData))
-      }
+    deleteRecent__browsing(item, index) {
+      this.recentBrowsingData.splice(index, 1);
+      localStorage.setItem(
+        "recentBrowsingData",
+        JSON.stringify(this.recentBrowsingData)
+      );
+    }
   },
   mounted() {
-      if (localStorage.getItem("recentBrowsingData")) {
-          this.recentBrowsingData = JSON.parse(localStorage.getItem("recentBrowsingData"))
-          console.log(this.recentBrowsingData);
-      }
+    if (localStorage.getItem("recentBrowsingData")) {
+      this.recentBrowsingData = JSON.parse(
+        localStorage.getItem("recentBrowsingData")
+      );
+      console.log(this.recentBrowsingData);
+    }
   },
   created() {},
   filters: {},
   computed: {
-      // recentBrowsingData() {
-      //     return this.$store.state.recentBrowsingData
-      // }
+    // recentBrowsingData() {
+    //     return this.$store.state.recentBrowsingData
+    // }
   },
   watch: {},
   directives: {}
@@ -87,33 +97,33 @@ export default {
   text-align: center;
 }
 .recent__browsing__second {
-    width: 100vw;
+  width: 100vw;
 }
 .browsing__second__item {
-   display: flex;
-    position: relative;
+  display: flex;
+  position: relative;
 }
-    .browsing__second__img {
-        height: 200px;
-    }
-    .second__item__name {
-        font-size: 30px;
-        margin-top: 10px;
-    }
-    .second__item__price {
-        font-size: 30px;
-        color: #e0322b;
-        margin-top: 50px;
-    }
-    .second__item__delete {
-        width: 30px;
-        line-height: 30px;
-        text-align: center;
-        font-size: 30px;
-        border: 1px solid dimgrey;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-    }
+.browsing__second__img {
+  height: 200px;
+}
+.second__item__name {
+  font-size: 30px;
+  margin-top: 10px;
+}
+.second__item__price {
+  font-size: 30px;
+  color: #e0322b;
+  margin-top: 50px;
+}
+.second__item__delete {
+  width: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 30px;
+  border: 1px solid dimgrey;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
 </style>

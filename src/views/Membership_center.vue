@@ -6,8 +6,18 @@
         <van-icon name="setting" size="20px" />
       </div>
       <div class="second__manager">
-        <van-icon name="manager" size="50px" color="orange" v-if="!this.$store.state.user"/>
-        <img :src="userInfo.avatar" alt="" v-else-if="this.$store.state.user" class="second__user__image">
+        <van-icon
+          name="manager"
+          size="50px"
+          color="orange"
+          v-if="!this.$store.state.user"
+        />
+        <img
+          :src="userInfo.avatar"
+          alt=""
+          v-else-if="this.$store.state.user"
+          class="second__user__image"
+        />
       </div>
       <div class="second__user">
         欢迎您：<span v-if="userInfo">{{ userInfo.nickname }}</span>
@@ -21,30 +31,30 @@
     </div>
     <div class="my__third">
       <div>
-        <van-icon name="paid" size="25px"/>
+        <van-icon name="paid" size="25px" />
         <div>待付款</div>
       </div>
       <div>
-        <van-icon name="shop-o" size="25px"/>
+        <van-icon name="shop-o" size="25px" />
         <div>待发货</div>
       </div>
       <div>
-        <van-icon name="logistics" size="25px"/>
+        <van-icon name="logistics" size="25px" />
         <div>待收货</div>
       </div>
       <div @click="jump__evaluation">
-        <van-icon name="records" :info="evaluate" size="25px"/>
+        <van-icon name="records" :info="evaluate" size="25px" />
         <div>评价</div>
       </div>
       <div @click="jump__Order">
-        <van-icon name="points" size="25px"/>
+        <van-icon name="points" size="25px" />
         <div>已完成</div>
       </div>
     </div>
     <div class="my__fourth">
-     <div class="fourth__left" @click="jump__Order">
-       <van-icon name="orders-o" size="25px"/>全部订单
-     </div>
+      <div class="fourth__left" @click="jump__Order">
+        <van-icon name="orders-o" size="25px" />全部订单
+      </div>
       <div class="fourth__right">
         〉
       </div>
@@ -52,7 +62,7 @@
     <div class="my__fifth">
       <div class="fifth__item">
         <div class="fourth__left" @click="jump__mycollection">
-          <van-icon name="points" size="25px"/>收藏商品
+          <van-icon name="points" size="25px" />收藏商品
         </div>
         <div class="fourth__right">
           〉
@@ -60,7 +70,7 @@
       </div>
       <div class="fifth__item" @click="jump__AddressList">
         <div class="fourth__left">
-          <van-icon name="wap-home" size="25px"/>地址管理
+          <van-icon name="wap-home" size="25px" />地址管理
         </div>
         <div class="fourth__right">
           〉
@@ -68,7 +78,7 @@
       </div>
       <div class="fifth__item">
         <div class="fourth__left" @click="jump__recentBrowsing">
-          <van-icon name="description" size="25px"/>最近浏览
+          <van-icon name="description" size="25px" />最近浏览
         </div>
         <div class="fourth__right">
           〉
@@ -97,13 +107,14 @@ export default {
         .then(response => {
           if (response) {
             localStorage.removeItem("user");
-            localStorage.removeItem("recentBrowsingData")
+            localStorage.removeItem("recentBrowsingData");
+            localStorage.removeItem("searchHistory");
             this.$store.state.user = "";
             this.$store.state.userData = "";
             this.$store.state.details_login = true;
             console.log(this.userInfo);
             console.log(response);
-            this.$store.state.showOut = !this.$store.state.showOut
+            this.$store.state.showOut = !this.$store.state.showOut;
           }
         })
         .catch(err => {
@@ -111,63 +122,72 @@ export default {
         });
     },
     login__Out1() {
-      this.$router.push({name: "login"})
-      this.$store.state.showOut = !this.$store.state.showOut
+      this.$router.push({ name: "login" });
+      this.$store.state.showOut = !this.$store.state.showOut;
     },
-    getUserData () {
-      this.$axios.req("api/queryUser",{}).then((response) => {
-        if (response.code === 200) {
-          this.$store.state.user = response.userInfo
-          console.log(this.$store.state.user);
-        }
-      }).catch((err) => {
-        console.log(err);
-      })
+    getUserData() {
+      this.$axios
+        .req("api/queryUser", {})
+        .then(response => {
+          if (response.code === 200) {
+            this.$store.state.user = response.userInfo;
+            console.log(this.$store.state.user);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     jump__personal__data() {
-      this.$router.push({name: "personal"})
+      this.$router.push({ name: "personal" });
     },
     jump__AddressList() {
-      this.$store.state.returnMember = true
-      this.$router.push({name: "addressList"})
+      this.$store.state.returnMember = true;
+      this.$router.push({ name: "addressList" });
     },
     jump__evaluation() {
-      this.$router.push({name: "evaluation"})
+      this.$router.push({ name: "evaluation" });
     },
     jump__mycollection() {
-      this.$router.push({name: "myCollection"})
+      this.$router.push({ name: "myCollection" });
     },
     jump__Order() {
-      this.$router.push({name: "orderQuery"})
+      this.$router.push({ name: "orderQuery" });
     },
     getAlreadyMem() {
-      this.$axios.req("api/alreadyEvaluated").then((response) => {
-        if (response) {
-          this.alreadyData = response.data.list
-          console.log(this.alreadyData);
-        }
-      }).catch((err) => {
-        console.log(err);
-      })
+      this.$axios
+        .req("api/alreadyEvaluated")
+        .then(response => {
+          if (response) {
+            this.alreadyData = response.data.list;
+            console.log(this.alreadyData);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     getTobeMem() {
-      this.$axios.req("api/tobeEvaluated").then((response) => {
-        if (response) {
-          this.tobeData = response.data.list
-          console.log(this.tobeData);
-        }
-      }).catch((err) => {
-        console.log(err);
-      })
+      this.$axios
+        .req("api/tobeEvaluated")
+        .then(response => {
+          if (response) {
+            this.tobeData = response.data.list;
+            console.log(this.tobeData);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     jump__recentBrowsing() {
-      this.$router.push({name: "recentBrowsing"})
+      this.$router.push({ name: "recentBrowsing" });
     }
   },
   mounted() {
-    this.getUserData()
-    this.getAlreadyMem()
-    this.getTobeMem()
+    this.getUserData();
+    this.getAlreadyMem();
+    this.getTobeMem();
   },
   created() {},
   filters: {},
@@ -175,12 +195,12 @@ export default {
     userInfo() {
       return this.$store.state.user;
     },
-    showOut () {
-      return this.$store.state.showOut
+    showOut() {
+      return this.$store.state.showOut;
     },
     evaluate() {
-      let Num = parseInt(this.alreadyData.length + this.tobeData.length)
-      return Num
+      let Num = parseInt(this.alreadyData.length + this.tobeData.length);
+      return Num;
     }
   },
   watch: {},
@@ -189,9 +209,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .my__body {
-    width: 100vw;
-  }
+.my__body {
+  width: 100vw;
+}
 .my__first {
   width: 100%;
   line-height: 70px;
@@ -245,44 +265,44 @@ export default {
   left: 50%;
   transform: translate(-100px);
 }
-  .my__third {
-    width: 100vw;
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-around;
-    font-size: 30px;
-    align-items: center;
+.my__third {
+  width: 100vw;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  font-size: 30px;
+  align-items: center;
   text-align: center;
-  }
-  .van-info {
-    line-height: 30px !important;
-    min-width: 30px !important;
-    font-size: 20px !important;
-  }
-  .my__fourth {
-    width: 100vw;
-    font-size: 30px;
-    margin-top: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .fourth__left {
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-  }
-  .fourth__right {
-    font-size: 30px;
-    padding-right: 10px;
-  }
-  .my__fifth {
-    margin-top: 50px;
-  }
-  .fifth__item {
-    display: flex;
-    justify-content: space-between;
-    font-size: 30px;
-    margin-top: 20px;
-  }
+}
+.van-info {
+  line-height: 30px !important;
+  min-width: 30px !important;
+  font-size: 20px !important;
+}
+.my__fourth {
+  width: 100vw;
+  font-size: 30px;
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.fourth__left {
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+.fourth__right {
+  font-size: 30px;
+  padding-right: 10px;
+}
+.my__fifth {
+  margin-top: 50px;
+}
+.fifth__item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 30px;
+  margin-top: 20px;
+}
 </style>

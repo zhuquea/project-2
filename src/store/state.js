@@ -17,5 +17,6 @@ export default {
   to_orderSettle2: false,
   returnShoppingCart: false,
   isAnonymous: false,
-  recentBrowsingData: []
+  recentBrowsingData: [],
+  cityName: "成都市"
 };

@@ -13,15 +13,15 @@
         <img :src="authorData.avatar" alt="" class="second__author__img" />
         <div>
           <div class="user__Data__Evaluate">
-             {{userDataEvaluate}}
+            {{ userDataEvaluate }}
           </div>
           <van-rate
-                  v-model="detailsData.rate"
-                  :size="sizeObj"
-                  color="#f44"
-                  void-icon="star"
-                  void-color="#eee"
-                  class="commodity__rate"
+            v-model="detailsData.rate"
+            :size="sizeObj"
+            color="#f44"
+            void-icon="star"
+            void-color="#eee"
+            class="commodity__rate"
           ></van-rate>
         </div>
       </div>
@@ -83,19 +83,22 @@ export default {
     },
     add__shoppingCart() {},
     evaluateOneData() {
-      this.$axios.req("api/evaluateOne",{_id: this.detailsData._id}).then((response) => {
-        if (response.code === 200) {
-          this.userDataEvaluate = response.evaluateOne.user[0].nickname
-          console.log(this.userDataEvaluate);
-        }
-      }).catch((err) => {
-        console.log(err);
-      })
+      this.$axios
+        .req("api/evaluateOne", { _id: this.detailsData._id })
+        .then(response => {
+          if (response.code === 200) {
+            this.userDataEvaluate = response.evaluateOne.user[0].nickname;
+            console.log(this.userDataEvaluate);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   mounted() {
     this.detailsData = this.$route.query.details;
-    this.evaluateOneData()
+    this.evaluateOneData();
     console.log(this.detailsData);
   },
   created() {},
@@ -196,7 +199,7 @@ export default {
 .van-button {
   font-size: 30px;
 }
-  .user__Data__Evaluate {
-    font-size: 30px;
-  }
+.user__Data__Evaluate {
+  font-size: 30px;
+}
 </style>

@@ -16,12 +16,7 @@
         头像
       </div>
       <div class="third__right">
-        <van-icon
-          name="manager"
-          size="50px"
-          color="orange"
-          v-if="!userData"
-        />
+        <van-icon name="manager" size="50px" color="orange" v-if="!userData" />
         <img
           :src="userData.avatar"
           alt=""
@@ -36,11 +31,7 @@
         用户名
       </div>
       <div class="fourth__right">
-        <van-field
-          v-model="value0"
-          :placeholder="userData.username"
-          disabled
-        />
+        <van-field v-model="value0" :placeholder="userData.username" disabled />
       </div>
     </div>
     <div class="personal__fifth">
@@ -50,8 +41,7 @@
       <div class="fifth__right">
         <van-field
           v-model="userData.nickname"
-          :placeholder="userData.nickname"
-        />
+          :placeholder="userData.nickname"></van-field>
       </div>
     </div>
     <div class="personal__fifth">
@@ -62,16 +52,14 @@
         <van-field
           v-model="userData.gender"
           :placeholder="userData.gender"
-          @click="switch__showGender"
-        />
+          @click="switch__showGender"></van-field>
         <van-action-sheet v-model="showGender">
           <van-picker
             show-toolbar
             title="性别"
             :columns="columns"
             @confirm="onConfirm"
-            @cancel="onCancel"
-          />
+            @cancel="onCancel"></van-picker>
         </van-action-sheet>
       </div>
     </div>
@@ -90,15 +78,14 @@
       <div class="sixth__right" @click="switch__show">
         {{ userData.year }}年{{ userData.month }}月{{ userData.day }}日
       </div>
-        <van-popup position="bottom" v-model="showYear" @select="onSelect">
-          <van-datetime-picker
-            v-model="currentDate"
-            type="date"
-            :min-date="minDate"
-            @confirm="onConfirm1"
-            @cancel="onCancel1"
-          />
-        </van-popup>
+      <van-popup position="bottom" v-model="showYear" @select="onSelect">
+        <van-datetime-picker
+          v-model="currentDate"
+          type="date"
+          :min-date="minDate"
+          @confirm="onConfirm1"
+          @cancel="onCancel1"></van-datetime-picker>
+      </van-popup>
     </div>
     <div class="personal__seventh">
       <van-button type="primary" size="large" @click="save__User"
@@ -128,7 +115,7 @@ export default {
       showGender: false,
       currentDate: new Date(),
       minDate: new Date(2017, 1, 1),
-      columns: ["男", "女", "保密"],
+      columns: ["男", "女", "保密"]
     };
   },
   methods: {
@@ -155,9 +142,9 @@ export default {
       this.showGender = false;
     },
     onConfirm1(value) {
-      this.$store.state.user.year = value.getFullYear()
-      this.$store.state.user.month = value.getMonth()
-      this.$store.state.user.day = value.getDay()
+      this.$store.state.user.year = value.getFullYear();
+      this.$store.state.user.month = value.getMonth();
+      this.$store.state.user.day = value.getDay();
       this.showYear = false;
       console.log(this.showYear);
     },
@@ -172,10 +159,10 @@ export default {
         nickname: this.$store.state.user.nickname,
         year: this.$store.state.user.year,
         id: this.$store.state.user._id
-      }
+      };
       console.log(UserData);
       axios
-        .post("api/saveUser", UserData )
+        .post("api/saveUser", UserData)
         .then(response => {
           if (response.code === 200) {
             Toast({
@@ -194,8 +181,7 @@ export default {
       this.$router.push({ name: "membership" });
     }
   },
-  mounted() {
-  },
+  mounted() {},
   created() {},
   filters: {},
   computed: {

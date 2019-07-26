@@ -50,7 +50,9 @@ export default {
     }
   },
   mounted() {
-    this.historyData = JSON.parse(localStorage.getItem("searchHistory"))
+    if (localStorage.getItem("searchHistory")) {
+      this.historyData = JSON.parse(localStorage.getItem("searchHistory"))
+    }
   },
   created() {},
   filters: {},

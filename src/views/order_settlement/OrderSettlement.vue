@@ -202,6 +202,7 @@ export default {
               });
               this.$store.state.shopping_Cart = [];
               this.$store.state.shopping_Cart2 = [];
+              this.$router.push({name: "shoppingCart"})
               console.log(response);
             }
           })

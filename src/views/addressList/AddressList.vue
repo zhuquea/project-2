@@ -51,6 +51,7 @@ export default {
   methods: {
     addressReturn() {
       if (this.$store.state.returnMember === false) {
+        //to_orderSettle2 === true：从购物车进入订单结算页面，再进入地址列表，返回时，让订单结算页面获取购物车数据
         if (this.$store.state.to_orderSettle2 === true) {
              this.$router.push({name: "orderSettlement"})
           this.$store.state.to_orderSettle = true
@@ -79,6 +80,7 @@ export default {
         .then(response => {
           if (response.code === 200) {
             this.$store.state.receiveAddress = response.address;
+            console.log(this.$store.state.receiveAddress);
             this.$store.state.receiveAddress.forEach(item => {
               item.id = item._id;
             });

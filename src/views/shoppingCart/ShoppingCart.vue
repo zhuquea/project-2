@@ -104,6 +104,7 @@ export default {
           console.log(err);
         });
     },
+    //全选
     AllElect() {
       if (this.allElection === true) {
         this.shopping_Cart.forEach(item => {
@@ -117,6 +118,7 @@ export default {
         this.showDiv = false
       }
     },
+    //反选
     reverseElection() {
       let flag = true;
       this.shopping_Cart.forEach(item => {
@@ -135,6 +137,7 @@ export default {
         }
       })
     },
+    //购物车加减商品
     onChange(item) {
       this.$axios
         .req("api/editCart", {
@@ -151,6 +154,7 @@ export default {
           console.log(err);
         });
     },
+    //删除操作
     delete__Data() {
       Dialog.confirm({
         title: "删除操作",

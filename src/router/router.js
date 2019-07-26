@@ -160,6 +160,15 @@ const router = new Router({
         title: "最近浏览",
         showFooter: false
       }
+    },
+    {
+      path: "/cityList",
+      name: "cityList",
+      component: () => import("../views/cityList/CityList.vue"),
+      meta: {
+        title: "城市列表",
+        showFooter: false
+      }
     }
   ]
 });

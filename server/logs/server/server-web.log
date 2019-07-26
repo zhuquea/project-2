@@ -1166,3 +1166,75 @@ hostname: stu015
 pid: 5324
 hostname: stu015
 
+2019-07-26 10:54:20,250 ERROR 2376 [-/127.0.0.1/-/5ms POST /v1/order] nodejs.TypeError: Cannot read property 'count' of undefined
+    at OperatingGoodsController.order (C:\Users\Administrator\Desktop\project2\server\app\controller\api\operatingGoods.js:218:24)
+    at processTicksAndRejections (internal/process/task_queues.js:89:5)
+    at async C:\Users\Administrator\Desktop\project2\server\app\middleware\isLogin.js:15:13
+    at async C:\Users\Administrator\Desktop\project2\server\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:50
+    at async xframe (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\xframe.js:7:5)
+    at async xssProtection (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\xssProtection.js:7:5)
+    at async nosniff (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\nosniff.js:8:5)
+    at async noopen (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\noopen.js:8:5)
+    at async session (C:\Users\Administrator\Desktop\project2\server\node_modules\koa-session\index.js:41:7)
+    at async bodyParser (C:\Users\Administrator\Desktop\project2\server\node_modules\koa-bodyparser\index.js:86:5)
+    at async C:\Users\Administrator\Desktop\project2\server\node_modules\koa-static-cache\index.js:51:63
+    at async notfound (C:\Users\Administrator\Desktop\project2\server\node_modules\egg\app\middleware\notfound.js:5:5)
+    at async meta (C:\Users\Administrator\Desktop\project2\server\node_modules\egg\app\middleware\meta.js:12:5)
+
+pid: 2376
+hostname: stu015
+
+2019-07-26 10:54:22,824 ERROR 2376 [-/127.0.0.1/-/2ms POST /v1/order] nodejs.TypeError: Cannot read property 'count' of undefined
+    at OperatingGoodsController.order (C:\Users\Administrator\Desktop\project2\server\app\controller\api\operatingGoods.js:218:24)
+    at processTicksAndRejections (internal/process/task_queues.js:89:5)
+    at async C:\Users\Administrator\Desktop\project2\server\app\middleware\isLogin.js:15:13
+    at async C:\Users\Administrator\Desktop\project2\server\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:50
+    at async xframe (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\xframe.js:7:5)
+    at async xssProtection (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\xssProtection.js:7:5)
+    at async nosniff (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\nosniff.js:8:5)
+    at async noopen (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\noopen.js:8:5)
+    at async session (C:\Users\Administrator\Desktop\project2\server\node_modules\koa-session\index.js:41:7)
+    at async bodyParser (C:\Users\Administrator\Desktop\project2\server\node_modules\koa-bodyparser\index.js:86:5)
+    at async C:\Users\Administrator\Desktop\project2\server\node_modules\koa-static-cache\index.js:51:63
+    at async notfound (C:\Users\Administrator\Desktop\project2\server\node_modules\egg\app\middleware\notfound.js:5:5)
+    at async meta (C:\Users\Administrator\Desktop\project2\server\node_modules\egg\app\middleware\meta.js:12:5)
+
+pid: 2376
+hostname: stu015
+
+2019-07-26 10:55:35,174 ERROR 2376 [-/127.0.0.1/-/2ms POST /v1/order] nodejs.TypeError: Cannot read property 'count' of undefined
+    at OperatingGoodsController.order (C:\Users\Administrator\Desktop\project2\server\app\controller\api\operatingGoods.js:218:24)
+    at processTicksAndRejections (internal/process/task_queues.js:89:5)
+    at async C:\Users\Administrator\Desktop\project2\server\app\middleware\isLogin.js:15:13
+    at async C:\Users\Administrator\Desktop\project2\server\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:50
+    at async xframe (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\xframe.js:7:5)
+    at async xssProtection (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\xssProtection.js:7:5)
+    at async nosniff (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\nosniff.js:8:5)
+    at async noopen (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\noopen.js:8:5)
+    at async session (C:\Users\Administrator\Desktop\project2\server\node_modules\koa-session\index.js:41:7)
+    at async bodyParser (C:\Users\Administrator\Desktop\project2\server\node_modules\koa-bodyparser\index.js:86:5)
+    at async C:\Users\Administrator\Desktop\project2\server\node_modules\koa-static-cache\index.js:51:63
+    at async notfound (C:\Users\Administrator\Desktop\project2\server\node_modules\egg\app\middleware\notfound.js:5:5)
+    at async meta (C:\Users\Administrator\Desktop\project2\server\node_modules\egg\app\middleware\meta.js:12:5)
+
+pid: 2376
+hostname: stu015
+
+2019-07-26 10:55:36,695 ERROR 2376 [-/127.0.0.1/-/1ms POST /v1/order] nodejs.TypeError: Cannot read property 'count' of undefined
+    at OperatingGoodsController.order (C:\Users\Administrator\Desktop\project2\server\app\controller\api\operatingGoods.js:218:24)
+    at processTicksAndRejections (internal/process/task_queues.js:89:5)
+    at async C:\Users\Administrator\Desktop\project2\server\app\middleware\isLogin.js:15:13
+    at async C:\Users\Administrator\Desktop\project2\server\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:50
+    at async xframe (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\xframe.js:7:5)
+    at async xssProtection (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\xssProtection.js:7:5)
+    at async nosniff (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\nosniff.js:8:5)
+    at async noopen (C:\Users\Administrator\Desktop\project2\server\node_modules\egg-security\lib\middlewares\noopen.js:8:5)
+    at async session (C:\Users\Administrator\Desktop\project2\server\node_modules\koa-session\index.js:41:7)
+    at async bodyParser (C:\Users\Administrator\Desktop\project2\server\node_modules\koa-bodyparser\index.js:86:5)
+    at async C:\Users\Administrator\Desktop\project2\server\node_modules\koa-static-cache\index.js:51:63
+    at async notfound (C:\Users\Administrator\Desktop\project2\server\node_modules\egg\app\middleware\notfound.js:5:5)
+    at async meta (C:\Users\Administrator\Desktop\project2\server\node_modules\egg\app\middleware\meta.js:12:5)
+
+pid: 2376
+hostname: stu015
+
