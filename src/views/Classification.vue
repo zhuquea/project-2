@@ -4,8 +4,8 @@
       <van-loading
         type="spinner"
         color="#1989fa"
-        v-if="this.classDataAll.length === 0"></van-loading>
-      <div v-else-if="this.classDataAll.length > 0">
+        v-if="this.classDataArr === 0"></van-loading>
+      <div v-else>
         <div class="classification__top">
           商品分类
         </div>
@@ -43,8 +43,7 @@
                     class="datalist"
                   >
                     <img
-                      :src="item.image"
-                      alt=""
+                      v-lazy="item.image"
                       class="item__img"
                       @click="jump__details(item)"
                     />
@@ -76,8 +75,8 @@ export default {
   props: {},
   data() {
     return {
-      classDataArr: [],
-      classDataAll: [],
+      classDataArr: [],//从首页点击相应分类商品进入分类页面时，给classDataArr赋值
+      classDataAll: [],//classDataAll接收完整数据
       classDataItem: [],
       idObj: "",
       datalist: [],
@@ -102,11 +101,16 @@ export default {
     },
     switchclass(item, index) {
       this.tabnumobj = index;
+      //从分类页面进入详情页，从详情也返回分类时，需要将 this.$store.state.tabnumobj传回来
+      this.$store.state.tabnumobj = index
       this.activeObj = 0;
       this.classDataAll.forEach(item => {
         if (this.classDataAll.indexOf(item) === index) {
           this.classDataItem = item;
           this.classDataArr = this.classDataItem.bxMallSubDto;
+          //从分类页面进入详情页，从详情也返回分类时，需要将 this.$store.state.classDataArr传回来
+          this.$store.state.classDataArr = this.classDataItem.bxMallSubDto
+          console.log(this.$store.state.classDataArr);
           this.idObj = this.classDataArr[0].mallSubId;
           this.$axios
             .req(`api/classification?mallSubId=${this.idObj}`)
@@ -145,27 +149,49 @@ export default {
   },
   mounted() {
     // this.classDataAll = JSON.parse(localStorage.getItem('category'))
+    //classDataAll接收完整数据
     this.classDataAll = this.$route.query.categroy;
-    //存储到vuex中，当从分类进入详情，再从详情返回分类页面再把数据传回来，是分类页面有数据
+    //存储到vuex中，当从分类进入详情，再从详情返回分类页面再把数据传回来，使分类页面有数据
     this.$store.state.classDataAll = this.$route.query.categroy;
     console.log(this.classDataAll);
+    //从首页点击相应分类商品进入分类页面时，给classDataArr赋值
     this.classDataArr = this.$route.query.bxMallSubDto;
-    //存储到vuex中，当从分类进入详情，再从详情返回分类页面再把数据传回来，是分类页面有数据
-    this.$store.state.classDataArr = this.$route.query.bxMallSubDto;
+    //存储到vuex中，当从分类进入详情，再从详情返回分类页面再把数据传回来，使分类页面有数据
+    if (this.$route.query.bxMallSubDto) {
+      this.$store.state.classDataArr = this.$route.query.bxMallSubDto
+    }
+    // this.$store.state.classDataArr = this.$route.query.bxMallSubDto
     console.log(this.classDataArr);
+    //从首页点击相应分类商品进入分类页面时，让tabnumobj等于相应下标
     this.tabnumobj = this.$route.query.index;
-    //存储到vuex中，当从分类进入详情，再从详情返回分类页面再把数据传回来，是分类页面有数据
-    this.$store.state.tabnumobj = this.$route.query.index;
+    //存储到vuex中，当从分类进入详情，再从详情返回分类页面再把数据传回来，使分类页面有数据
+    if (this.$route.query.index) {
+      this.$store.state.tabnumobj = this.$route.query.index
+    }
     console.log(this.tabnumobj);
     console.log(this.classDataArr);
-    if (!this.$route.query.bxMallSubDto) {
-      this.classDataAll.forEach(item => {
-        if (this.classDataAll.indexOf(item) === 0) {
-          this.classDataItem = item;
-          this.classDataArr = this.classDataItem.bxMallSubDto;
-        }
-      });
-      this.tabnumobj = 0;
+    //从底部栏点击分类，进入分类页面时进行的操作
+    if (this.$store.state.fromFooter === true) {
+      if (this.$store.state.classDataArr.length === 0) {
+        this.classDataAll.forEach(item => {
+          if (this.classDataAll.indexOf(item) === 0) {
+            this.classDataItem = item;
+            this.classDataArr = this.classDataItem.bxMallSubDto;
+          }
+        });
+        this.tabnumobj = 0;
+      } else {
+        this.classDataArr = this.$store.state.classDataArr
+        this.tabnumobj = this.$store.state.tabnumobj
+      }
+      // this.classDataAll.forEach(item => {
+      //   if (this.classDataAll.indexOf(item) === 0) {
+      //     this.classDataItem = item;
+      //     this.classDataArr = this.classDataItem.bxMallSubDto;
+      //   }
+      // });
+      // this.tabnumobj = 0;
+      this.$store.state.fromFooter = false;
     }
     if (this.classDataArr) {
       this.idObj = this.classDataArr[0].mallSubId;
@@ -210,6 +236,7 @@ export default {
 }
 .classification__content {
   display: flex;
+  padding-bottom: 100px;
 }
 .classification__left {
   width: 20vw;
@@ -256,5 +283,10 @@ export default {
 .left__class {
   color: #47d1d1;
   background-color: white;
+}
+.van-loading__spinner {
+  width: 100vw;
+  height: 10vw;
+ margin-top: 50%;
 }
 </style>

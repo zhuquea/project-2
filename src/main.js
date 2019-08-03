@@ -8,10 +8,18 @@ import axios from "axios";
 import Vant from "vant";
 import "vant/lib/index.css";
 import "lib-flexible";
+import VueLazyload from 'vue-lazyload'
+import imgs from "./picture/senlin.jpg"
 
 Vue.use(Vant);
 Vue.prototype.$axios = http;
 Vue.prototype.$moment = moment();
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+  loading: imgs,
+  attempt: 1
+})
+
 
 Vue.config.productionTip = false;
 

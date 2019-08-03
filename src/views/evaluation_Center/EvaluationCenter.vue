@@ -232,4 +232,9 @@ export default {
   align-items: center;
   padding-left: 20px;
 }
+.van-loading__spinner {
+  width: 100vw;
+  height: 10vw;
+  margin-top: 50%;
+}
 </style>

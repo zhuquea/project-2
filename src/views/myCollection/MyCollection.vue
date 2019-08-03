@@ -14,7 +14,7 @@
         :key="item.cid"
         class="second__collection__item"
       >
-        <img :src="item.image_path" alt="" class="my__collection__image" />
+        <img :src="item.image_path" alt="" class="my__collection__image" @click="jump__details_Obj(item)"/>
         <div class="second__1__div">
           <div class="collection__item__name">
             {{ item.name }}
@@ -75,6 +75,10 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    jump__details_Obj(item) {
+      this.$store.state.fromCollection = true
+      this.$router.push({name: "details" , query:{id: item.cid}})
     }
   },
   mounted() {

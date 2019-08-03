@@ -87,6 +87,7 @@ export default {
         name: "classification",
         query: { categroy: this.$store.state.category }
       });
+      this.$store.state.fromFooter = true
     },
     switchclass2() {
       this.$emit('update:tabnum', 2)

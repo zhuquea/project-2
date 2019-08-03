@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <router-view />
+    <keep-alive include="classification,orderSettlement"><router-view /></keep-alive>
+<!--    <router-view />-->
     <Footer v-if="$route.meta.showFooter" :tabnum.sync="tabnum"></Footer>
   </div>
 </template>
