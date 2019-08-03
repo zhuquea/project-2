@@ -3,7 +3,8 @@
     <div>
       <div class="First">
         <div class="app1" @click="jump__city">
-          <span class="app1__city">{{CityData}}</span>
+            <van-loading type="spinner" color="#1989fa" v-if="this.$store.state.isLocation === false" />
+          <span class="app1__city" v-else>{{ CityData }}</span>
           <van-icon name="location" size="20px" />
         </div>
         <div class="app2">
@@ -267,7 +268,8 @@ export default {
       category: [],
       searchData: [],
       hiddenHome: false,
-      searchHistoryData: []
+      searchHistoryData: [],
+      City_Name: "" //定位使用到
     };
   },
   methods: {
@@ -379,7 +381,6 @@ export default {
                 type: "success",
                 duration: 2000
               });
-              this.$store.state.shopping_Cart2.push(item.goodsId);
             }
           })
           .catch(err => {
@@ -395,6 +396,58 @@ export default {
         localStorage.getItem("searchHistory")
       );
     }
+    //定位
+    if (this.$store.state.isLocation === false) {
+      let _this = this;
+      AMap.plugin("AMap.Geolocation", function() {
+        let geolocation = new AMap.Geolocation({
+          // 是否使用高精度定位，默认：true
+          enableHighAccuracy: true,
+          // 设置定位超时时间，默认：无穷大
+          timeout: 10000
+        });
+        geolocation.getCurrentPosition();
+        AMap.event.addListener(geolocation, "complete", onComplete);
+        AMap.event.addListener(geolocation, "error", onError);
+
+        function onComplete(data) {
+          // data是具体的定位信息
+          console.log(data);
+          _this.$store.state.cityName = data.addressComponent.city;
+          _this.$store.state.isLocation = true;
+          console.log(_this.City_Name);
+        }
+
+        function onError(data) {
+          console.log(data);
+          // 定位出错
+        }
+      });
+    }
+    //  let _this = this
+    // AMap.plugin('AMap.Geolocation', function() {
+    //   let geolocation = new AMap.Geolocation({
+    //     // 是否使用高精度定位，默认：true
+    //     enableHighAccuracy: true,
+    //     // 设置定位超时时间，默认：无穷大
+    //     timeout: 10000
+    //   })
+    //   geolocation.getCurrentPosition()
+    //   AMap.event.addListener(geolocation, 'complete', onComplete)
+    //   AMap.event.addListener(geolocation, 'error', onError)
+    //
+    //   function onComplete (data) {
+    //     // data是具体的定位信息
+    //     console.log(data);
+    //     _this.$store.state.cityName = data.addressComponent.city
+    //     console.log(_this.City_Name);
+    //   }
+    //
+    //   function onError (data) {
+    //     console.log(data);
+    //     // 定位出错
+    //   }
+    // })
   },
   created() {
     this.$nextTick(() => {
@@ -405,7 +458,7 @@ export default {
   filters: {},
   computed: {
     CityData() {
-      return this.$store.state.cityName
+      return this.$store.state.cityName;
     }
   },
   watch: {
@@ -418,6 +471,7 @@ export default {
             this.searchData = this.searchData.filter(item => {
               return JSON.stringify(item).indexOf(val) !== -1;
             });
+            //高亮显示关键字
             this.searchData.forEach((item, index) => {
               if (val && val.length > 0) {
                 let replaceReg = new RegExp(val, "g");

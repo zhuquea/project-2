@@ -70,48 +70,80 @@
           ></span>
         </van-tab>
         <van-tab title="商品评论" v-if="detailData.comment">
-           <div class="van__tab__comment" v-if="detailData.comment.length === 0">
-               暂无评论内容
-           </div>
-          <div class="van__tab__comment1" v-else-if="detailData.comment.length > 0">
-            <div v-for="(item,index) in detailData.comment" :key="index" class="detailData__comment__item">
+          <div class="van__tab__comment" v-if="detailData.comment.length === 0">
+            暂无评论内容
+          </div>
+          <div
+            class="van__tab__comment1"
+            v-else-if="detailData.comment.length > 0"
+          >
+            <div
+              v-for="(item, index) in detailData.comment"
+              :key="index"
+              class="detailData__comment__item"
+            >
               <div class="detailData__comment__left" v-if="item.user">
-                <img :src="item.user[0].avatar" alt="" class="detailData__comment__avatar">
+                <img
+                  :src="item.user[0].avatar"
+                  alt=""
+                  class="detailData__comment__avatar"
+                />
                 <div>
                   <div>
-                    {{item.user[0].nickname}}
+                    {{ item.user[0].nickname }}
                   </div>
                   <div>
-                    <van-rate v-model="item.rate" :size="sizeObj" color="#f44" void-icon="star" void-color="#eee" class="commodity__rate"></van-rate>
+                    <van-rate
+                      v-model="item.rate"
+                      :size="sizeObj"
+                      color="#f44"
+                      void-icon="star"
+                      void-color="#eee"
+                      class="commodity__rate"
+                    ></van-rate>
                   </div>
                   <div>
-                    {{item.content}}
+                    {{ item.content }}
                   </div>
                 </div>
               </div>
               <div class="detailData__comment__left" v-else>
-                <img :src="item.comment_avatar" alt="" class="detailData__comment__avatar">
+                <img
+                  :src="item.comment_avatar"
+                  alt=""
+                  class="detailData__comment__avatar"
+                />
                 <div>
                   <div>
-                    {{item.comment_nickname}}
+                    {{ item.comment_nickname }}
                   </div>
                   <div>
-                    <van-rate v-model="item.rate" :size="sizeObj" color="#f44" void-icon="star" void-color="#eee" class="commodity__rate"></van-rate>
+                    <van-rate
+                      v-model="item.rate"
+                      :size="sizeObj"
+                      color="#f44"
+                      void-icon="star"
+                      void-color="#eee"
+                      class="commodity__rate"
+                    ></van-rate>
                   </div>
                   <div>
-                    {{item.content}}
+                    {{ item.content }}
                   </div>
                 </div>
               </div>
-               <div class="detailData__comment__right">
-                 {{item.comment_time}}
-               </div>
+              <div class="detailData__comment__right">
+                {{ item.comment_time }}
+              </div>
             </div>
           </div>
         </van-tab>
       </van-tabs>
     </div>
-    <div class="detail__add__cart" v-if="this.$store.state.user && this.$store.state.shopping_Cart1">
+    <div
+      class="detail__add__cart"
+      v-if="this.$store.state.user && this.$store.state.shopping_Cart1"
+    >
       <van-goods-action class="detail__van__goods__action">
         <van-goods-action-icon icon="chat-o" text="客服" />
         <van-goods-action-icon
@@ -150,7 +182,8 @@
                 :disable-input="disabled"
                 max="50"
                 input-width="40px"
-                button-size="30px"></van-stepper>
+                button-size="30px"
+              ></van-stepper>
             </div>
             <div class="van__action__img">
               <img
@@ -210,7 +243,8 @@
                 :disable-input="disabled"
                 max="50"
                 input-width="40px"
-                button-size="30px"></van-stepper>
+                button-size="30px"
+              ></van-stepper>
             </div>
             <div class="van__action__img">
               <img
@@ -264,9 +298,12 @@ export default {
         .then(response => {
           if (response) {
             this.detailData = response.goods;
-            this.$store.state.recentBrowsingData.push(this.detailData.goodsOne)
-            this.recentBrowsingData.push(response.goods.goodsOne)
-            localStorage.setItem("recentBrowsingData",JSON.stringify(this.recentBrowsingData))
+            this.$store.state.recentBrowsingData.push(this.detailData.goodsOne);
+            this.recentBrowsingData.push(response.goods.goodsOne);
+            localStorage.setItem(
+              "recentBrowsingData",
+              JSON.stringify(this.recentBrowsingData)
+            );
             console.log(this.detailData);
           }
         })
@@ -279,7 +316,21 @@ export default {
     },
     returnObj() {
       // this.$router.go(-1);
-      this.$router.push({ name: "home" });
+      //从分类进来，点返回回到分类页面
+      if (this.$store.state.return_Class === false) {
+        this.$router.push({ name: "home" });
+      } else if (this.$store.state.return_Class) {
+        this.$router.push({
+          name: "classification",
+          query: {
+            categroy: this.$store.state.classDataAll,
+            bxMallSubDto: this.$store.state.classDataArr,
+            index: this.$store.state.tabnumobj
+          }
+        });
+        this.$store.state.return_Class = false;
+      }
+      // this.$router.push({ name: "home" });
     },
     preview__img() {
       ImagePreview({
@@ -296,6 +347,7 @@ export default {
     },
     collectionObj() {
       if (!this.$store.state.user) {
+        this.$store.state.isLocation = false;
         this.$router.push({
           name: "login",
           query: { details_login: this.details_login, id: this.goodsId }
@@ -354,6 +406,7 @@ export default {
     },
     add__to__cart() {
       if (!this.$store.state.user) {
+        this.$store.state.isLocation = false;
         this.$router.push({
           name: "login",
           query: { details_login: this.details_login, id: this.goodsId }
@@ -369,8 +422,6 @@ export default {
                 duration: 2000
               });
               this.getShoppingCard();
-              this.$store.state.shopping_Cart2.push(this.goodsId)
-              console.log(this.$store.state.shopping_Cart2);
               console.log(this.$store.state.shopping_Cart1);
               console.log(response);
             }
@@ -385,12 +436,13 @@ export default {
     },
     shopping__Now() {
       if (!this.$store.state.user) {
+        this.$store.state.isLocation = false;
         this.$router.push({
           name: "login",
           query: { details_login: this.details_login, id: this.goodsId }
         });
       } else if (this.$store.state.user) {
-        this.$store.state.shopping_Cart.push(this.goodsId)
+        this.$store.state.shopping_Cart.push(this.goodsId);
         this.$router.push({
           name: "orderSettlement",
           query: {
@@ -416,7 +468,7 @@ export default {
         });
     },
     jump__shoppingCart() {
-      this.$router.push({name: "shoppingCart"})
+      this.$router.push({ name: "shoppingCart" });
     }
   },
   mounted() {
@@ -431,10 +483,22 @@ export default {
     this.getDetailsData();
     this.getShoppingCard();
     if (localStorage.recentBrowsingData) {
-      this.recentBrowsingData = JSON.parse(localStorage.getItem("recentBrowsingData"))
+      this.recentBrowsingData = JSON.parse(
+        localStorage.getItem("recentBrowsingData")
+      );
       // console.log(JSON.parse(localStorage.getItem("recentBrowsingData")))
     }
   },
+  // beforeRouteEnter(to, from, next) {
+  //   let _this = this
+  //   console.log(to);
+  //   console.log(from);
+  //   if (from.path === "/classification") {
+  //     _this.$store.state.return_Class === true;
+  //     console.log(_this.$store.state.return_Class);
+  //   }
+  //   next();
+  // },
   created() {
     this.$nextTick(() => {
       this.checkCollection();
@@ -536,7 +600,7 @@ export default {
   font-size: 30px;
 }
 .detailData__comment__item {
-   display: flex;
+  display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }

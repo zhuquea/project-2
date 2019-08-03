@@ -107,6 +107,7 @@ export default {
         this.$store.state.shopping_Cart = [];
       } else if (this.$store.state.returnShoppingCart === true) {
         this.$store.state.returnShoppingCart = false;
+        this.$store.state.shopping_Cart3 = [];
         this.$router.push({ name: "shoppingCart" });
       }
     },
@@ -161,20 +162,15 @@ export default {
         });
     },
     jump__addressList() {
-      this.$router.push({ name: "addressList" });
-    },
-    getShoppingCart() {
-      this.$axios
-        .req("api/getCard", {})
-        .then(response => {
-          if (response) {
-            this.ShoppingCart = response.shopList;
-            console.log(this.ShoppingCart);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      if (this.$store.state.returnShoppingCart === true) {
+        this.$router.push({ name: "addressList" });
+        //从购物车页面进入订单结算，要去改变默认地址时，为了保证从地址列表界面回来时页面会有数据需要将this.$store.state.to_orderSettle变为true
+        this.$store.state.to_orderSettle === true
+        //同时为了让提交订单时传入的id数组符合要求，在进入地址列表前需要将this.$store.state.shopping_Cart2清空
+        this.$store.state.shopping_Cart2 = []
+      }else if (this.$store.state.returnShoppingCart === false) {
+        this.$router.push({ name: "addressList" });
+      }
     },
     onSubmit2() {
       if (!this.defaultAddress) {
@@ -202,6 +198,7 @@ export default {
               });
               this.$store.state.shopping_Cart = [];
               this.$store.state.shopping_Cart2 = [];
+              this.$store.state.shopping_Cart3 = [];
               this.$router.push({name: "shoppingCart"})
               console.log(response);
             }
@@ -236,10 +233,14 @@ export default {
     }
     console.log(this.orderData);
     console.log(this.$store.state.shopping_Cart);
-    console.log(this.$store.state.shopping_Cart2);
     this.getDefaultAddress();
     if (this.$store.state.to_orderSettle === true) {
-      this.getShoppingCart();
+      // this.getShoppingCart();
+      this.ShoppingCart = this.$store.state.shopping_Cart3
+      this.ShoppingCart.forEach((item) => {
+        this.$store.state.shopping_Cart2.push(item.cid)
+      })
+      console.log(this.$store.state.shopping_Cart2);
       this.$store.state.to_orderSettle = false;
       this.$store.state.to_orderSettle2 = true
     }

@@ -1,66 +1,67 @@
 <template>
-  <div class="classification__body">
-    <div class="classification__top">
-      商品分类
-    </div>
-    <div class="classification__content">
-      <div class="classification__left">
-        <div
-          v-for="(item, index) in classDataAll"
-          :key="index"
-          class="left__item"
-          :class="{ left__class: tabnumobj === index }"
-          @click="switchclass(item, index)"
-        >
-          {{ item.mallCategoryName }}
+  <div class="classification__body" ref="personWrap2">
+    <div>
+      <van-loading
+        type="spinner"
+        color="#1989fa"
+        v-if="this.classDataAll.length === 0"></van-loading>
+      <div v-else-if="this.classDataAll.length > 0">
+        <div class="classification__top">
+          商品分类
         </div>
-      </div>
-      <div class="classification__right">
-        <div class="right__top">
-          <van-tabs
-            class="classification__right__van"
-            line-width="60px"
-            @click="getclassData"
-            style="margin-top: 10px"
-            v-model="activeObj"
-          >
-            <van-tab
-              v-for="(item, index) in classDataArr"
+        <div class="classification__content">
+          <div class="classification__left">
+            <div
+              v-for="(item, index) in classDataAll"
               :key="index"
-              :title="item.mallSubName"
-              :name="item.mallSubId"
-              class="right__top__item"
+              class="left__item"
+              :class="{ left__class: tabnumobj === index }"
+              @click="switchclass(item, index)"
             >
-<!--                <div class="datalist__scroll" ref="personWrap2">-->
-<!--                    <div>-->
-<!--                        <div v-for="(item, index) in datalist" :key="index" class="datalist">-->
-<!--                            <img :src="item.image" alt="" class="item__img" />-->
-<!--                            <div>-->
-<!--                                <div class="item__name">{{ item.name }}</div>-->
-<!--                                <div class="item__price">-->
-<!--                                    ￥{{ item.present_price }}-->
-<!--                                    <span class="item__old__price">{{ item.orl_price }}</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-              <div
-                v-for="(item, index) in datalist"
-                :key="index"
-                class="datalist"
+              {{ item.mallCategoryName }}
+            </div>
+          </div>
+          <div class="classification__right">
+            <div class="right__top">
+              <van-tabs
+                class="classification__right__van"
+                line-width="60px"
+                @click="getclassData"
+                style="margin-top: 10px"
+                v-model="activeObj"
               >
-                <img :src="item.image" alt="" class="item__img" @click="jump__details(item)"/>
-                <div>
-                  <div class="item__name">{{ item.name }}</div>
-                  <div class="item__price">
-                    ￥{{ item.present_price }}
-                    <span class="item__old__price">{{ item.orl_price }}</span>
+                <van-tab
+                  v-for="(item, index) in classDataArr"
+                  :key="index"
+                  :title="item.mallSubName"
+                  :name="item.mallSubId"
+                  class="right__top__item"
+                >
+                  <div
+                    v-for="(item, index) in datalist"
+                    :key="index"
+                    class="datalist"
+                  >
+                    <img
+                      :src="item.image"
+                      alt=""
+                      class="item__img"
+                      @click="jump__details(item)"
+                    />
+                    <div>
+                      <div class="item__name">{{ item.name }}</div>
+                      <div class="item__price">
+                        ￥{{ item.present_price }}
+                        <span class="item__old__price">{{
+                          item.orl_price
+                        }}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </van-tab>
-          </van-tabs>
+                </van-tab>
+              </van-tabs>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -68,7 +69,7 @@
 </template>
 
 <script>
-    // import BScroll from "better-scroll"
+import BScroll from "better-scroll";
 export default {
   name: "Classification",
   components: {},
@@ -81,12 +82,12 @@ export default {
       idObj: "",
       datalist: [],
       tabnumobj: 0,
-        activeObj: 0
+      activeObj: 0
     };
   },
   methods: {
     getclassData(name) {
-        this.idObj = name;
+      this.idObj = name;
       this.$axios
         .req(`api/classification?mallSubId=${this.idObj}`)
         .then(response => {
@@ -101,7 +102,7 @@ export default {
     },
     switchclass(item, index) {
       this.tabnumobj = index;
-        this.activeObj = 0
+      this.activeObj = 0;
       this.classDataAll.forEach(item => {
         if (this.classDataAll.indexOf(item) === index) {
           this.classDataItem = item;
@@ -123,20 +124,38 @@ export default {
         }
       });
     },
-      jump__details(item) {
-          this.$router.push({
-              name: "details",
-              query: {id: item.id}
-          })
-      }
+    jump__details(item) {
+      this.$router.push({
+        name: "details",
+        query: { id: item.id }
+      });
+      this.$store.state.return_Class = true;
+    },
+    personScol2() {
+      this.$nextTick(() => {
+        if (!this.scroll1) {
+          this.scroll1 = new BScroll(this.$refs.personWrap2, {
+            click: true
+          });
+        } else {
+          this.scroll1.refresh();
+        }
+      });
+    }
   },
   mounted() {
     // this.classDataAll = JSON.parse(localStorage.getItem('category'))
     this.classDataAll = this.$route.query.categroy;
+    //存储到vuex中，当从分类进入详情，再从详情返回分类页面再把数据传回来，是分类页面有数据
+    this.$store.state.classDataAll = this.$route.query.categroy;
     console.log(this.classDataAll);
     this.classDataArr = this.$route.query.bxMallSubDto;
-      console.log(this.classDataArr);
-      this.tabnumobj = this.$route.query.index;
+    //存储到vuex中，当从分类进入详情，再从详情返回分类页面再把数据传回来，是分类页面有数据
+    this.$store.state.classDataArr = this.$route.query.bxMallSubDto;
+    console.log(this.classDataArr);
+    this.tabnumobj = this.$route.query.index;
+    //存储到vuex中，当从分类进入详情，再从详情返回分类页面再把数据传回来，是分类页面有数据
+    this.$store.state.tabnumobj = this.$route.query.index;
     console.log(this.tabnumobj);
     console.log(this.classDataArr);
     if (!this.$route.query.bxMallSubDto) {
@@ -165,6 +184,9 @@ export default {
       });
   },
   created() {
+    this.$nextTick(() => {
+      this.personScol2();
+    });
   },
   filters: {},
   computed: {},
@@ -176,6 +198,8 @@ export default {
 <style scoped lang="scss">
 .classification__body {
   margin-bottom: 80px;
+  height: 100vh;
+  overflow: hidden;
 }
 .classification__top {
   width: 100vw;
@@ -189,7 +213,7 @@ export default {
 }
 .classification__left {
   width: 20vw;
-    height: 100vh;
+  /*height: 100vh;*/
   background-color: #7d7e80;
 }
 .left__item {

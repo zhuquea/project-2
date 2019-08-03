@@ -89,9 +89,9 @@ export default {
       cityVal: "",
       indexArr: [],
       showCityListData: false,
-      CityListData: [], //CityListData子组件之中的数据
+      CityListData: [],
       CityListData2: [], //CityListData子组件之中的数据
-      CityListData3: [] //CityListData子组件之中的数据
+      CityListData3: []
     };
   },
   methods: {
@@ -162,6 +162,10 @@ export default {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #d8d8d8;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  background-color: white;
 }
 .first__return {
   width: 5vw;
@@ -176,6 +180,10 @@ export default {
 }
 .city__list__second {
   width: 100vw;
+  position: fixed;
+  top: 70px;
+  z-index: 100;
+  background-color: white;
 }
 .van-cell {
   font-size: 28px;
@@ -184,6 +192,10 @@ export default {
 .city__list__third {
   width: 100vw;
   font-size: 30px;
+  position: fixed;
+  top: 170px;
+  z-index: 100;
+  background-color: white;
 }
 .city__list__third__1 {
   margin-left: 20px;
@@ -202,10 +214,18 @@ export default {
 }
 .city__list__fourth__1 {
   font-size: 30px;
-  margin-left: 20px;
+  margin-left: 16px;
+  position: fixed;
+  top: 272px;
+  z-index: 100;
+  background-color: white;
 }
 .city__list__fourth__2 {
   width: 100vw;
+  position: fixed;
+  top: 310px;
+  z-index: 100;
+  background-color: white;
 }
 .fourth__2__one {
   width: 100vw;
@@ -220,4 +240,7 @@ export default {
   margin-top: 20px;
   margin-left: 20px;
 }
+  .city__list__fifth {
+    padding-top: 480px;
+  }
 </style>

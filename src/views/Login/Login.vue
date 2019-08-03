@@ -135,9 +135,11 @@ export default {
               this.$router.push({name:"details" , query: {idLogin : this.details_id}})
               this.$store.state.details_login = false
               this.$store.state.showOut = false
+              this.$store.state.isLogin = true
             } else {
               this.$router.push({ name: "home" });
               this.$store.state.showOut = false
+              this.$store.state.isLogin = true
             }
           }
         })
@@ -177,9 +179,11 @@ export default {
               this.$router.push({name:"details" , query: {idLogin : this.details_id}})
               this.$store.state.details_login = false
               this.$store.state.showOut = false
+              this.$store.state.isLogin = true
             } else {
               this.$router.push({ name: "home" });
               this.$store.state.showOut = false
+              this.$store.state.isLogin = true
             }
             // this.$router.push({ name: "home" });
           }

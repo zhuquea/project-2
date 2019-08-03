@@ -188,6 +188,11 @@ export default {
         });
     },
     to__settlement() {
+      this.shopping_Cart.forEach((item) => {
+        if (item.check === true) {
+          this.$store.state.shopping_Cart3.push(item)
+        }
+      })
       this.$store.state.to_orderSettle = true
       this.$store.state.returnShoppingCart = true
       this.$router.push({name: "orderSettlement"})

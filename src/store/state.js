@@ -2,11 +2,12 @@ export default {
   user: "",
   category: [],
   details_login: true,
-  showOut: false,
+  showOut: true,
   returnMember: false,
   shopping_Cart: [],
   shopping_Cart1: [],
   shopping_Cart2: [],
+  shopping_Cart3:[],
   userData: {},
   receiveAddress: [],
   idOrder: "",
@@ -18,5 +19,11 @@ export default {
   returnShoppingCart: false,
   isAnonymous: false,
   recentBrowsingData: [],
-  cityName: "成都市"
+  cityName: "城市",
+  return_Class: false,
+  isLocation: false,
+  classDataAll: [],
+  classDataArr: [],
+  tabnumobj: 0,
+  isLogin: false
 };

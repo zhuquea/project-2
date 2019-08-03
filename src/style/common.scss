@@ -75,4 +75,7 @@
   .van-index-bar__index {
     line-height: 35px !important;
   }
+  .van-index-bar__sidebar {
+    z-index: 1000 !important;
+  }
 }

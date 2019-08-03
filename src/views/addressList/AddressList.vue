@@ -45,7 +45,8 @@ export default {
   data() {
     return {
       disabledList: [],
-      chosenAddressId: ""
+      chosenAddressId: "",
+      defaultAddress: {}
     };
   },
   methods: {
@@ -53,10 +54,10 @@ export default {
       if (this.$store.state.returnMember === false) {
         //to_orderSettle2 === true：从购物车进入订单结算页面，再进入地址列表，返回时，让订单结算页面获取购物车数据
         if (this.$store.state.to_orderSettle2 === true) {
-             this.$router.push({name: "orderSettlement"})
-          this.$store.state.to_orderSettle = true
-          this.$store.state.to_orderSettle2 = false
-        }else if (this.$store.state.to_orderSettle2 === false) {
+          this.$router.push({ name: "orderSettlement" });
+          this.$store.state.to_orderSettle = true;
+          this.$store.state.to_orderSettle2 = false;
+        } else if (this.$store.state.to_orderSettle2 === false) {
           this.$router.push({
             name: "orderSettlement",
             query: {
@@ -84,9 +85,24 @@ export default {
             this.$store.state.receiveAddress.forEach(item => {
               item.id = item._id;
             });
-            this.chosenAddressId = response.address[0].id;
+            // this.chosenAddressId = response.address[0].id;
             // console.log(this.$store.state.receiveAddress[0].id);
             // console.log(this.$store.state.receiveAddress);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    //查询默认收货地址，将默认收货地址前面的选项打上√
+    getDefaultAddress() {
+      this.$axios
+        .req("api/getDefaultAddress")
+        .then(response => {
+          if (response.code === 200) {
+            this.defaultAddress = response.defaultAdd;
+            this.chosenAddressId = this.defaultAddress._id;
+            console.log(this.defaultAddress);
           }
         })
         .catch(err => {
@@ -101,6 +117,7 @@ export default {
       console.log(index);
       this.$router.push({ name: "editAddress", query: { item: item } });
     },
+    //设置默认收货地址
     onSelect() {
       this.$axios
         .req("api/setDefaultAddress", { id: this.chosenAddressId })
@@ -111,6 +128,7 @@ export default {
               type: "success",
               duration: 2000
             });
+            this.getDefaultAddress();
             console.log(response);
           }
         })
@@ -121,6 +139,7 @@ export default {
   },
   mounted() {
     this.getAddressData();
+    this.getDefaultAddress();
   },
   created() {},
   filters: {},

@@ -149,6 +149,7 @@ export default {
 .to__evaluate__third {
   width: 100vw;
   text-align: center;
+  font-size: 30px;
 }
 .third__textarea {
   width: 95vw;
