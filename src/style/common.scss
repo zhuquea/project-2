@@ -79,3 +79,10 @@
     z-index: 1000 !important;
   }
 }
+.home__loading {
+  .van-loading__spinner {
+    width: 100vw !important;
+    height: 10vw !important;
+    margin-top: 50% !important;
+  }
+}

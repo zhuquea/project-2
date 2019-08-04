@@ -8,7 +8,10 @@
         我的收藏
       </div>
     </div>
-    <div class="myCollection__second">
+    <div class="myCollection__second_Nouser" v-if="!this.$store.state.user">
+      你还未登录，请先登录
+    </div>
+    <div class="myCollection__second" v-else-if="this.$store.state.user">
       <div
         v-for="(item, index) in collectionData"
         :key="item.cid"
@@ -82,7 +85,9 @@ export default {
     }
   },
   mounted() {
-    this.getCollectionData();
+    if (this.$store.state.user) {
+      this.getCollectionData();
+    }
   },
   created() {},
   filters: {},
@@ -149,4 +154,8 @@ export default {
   bottom: 50px;
   color: #7d7e80;
 }
+  .myCollection__second_Nouser {
+    text-align: center;
+    font-size: 35px;
+  }
 </style>

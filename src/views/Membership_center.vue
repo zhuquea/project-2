@@ -115,6 +115,8 @@ export default {
             this.$store.state.isLogin = false;
             console.log(this.userInfo);
             console.log(response);
+            this.tobeData = [];
+            this.alreadyData = [];
             this.$store.state.showOut = !this.$store.state.showOut;
           }
         })
@@ -123,6 +125,9 @@ export default {
         });
     },
     login__Out1() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("recentBrowsingData");
+      localStorage.removeItem("searchHistory");
       this.$store.state.isLocation = false;
       this.$router.push({ name: "login" });
       this.$store.state.showOut = !this.$store.state.showOut;
@@ -190,8 +195,10 @@ export default {
     if (this.$store.state.isLogin === true) {
       this.getUserData();
     }
-    this.getAlreadyMem();
-    this.getTobeMem();
+    if (this.$store.state.user) {
+      this.getAlreadyMem();
+      this.getTobeMem();
+    }
   },
   created() {},
   filters: {},

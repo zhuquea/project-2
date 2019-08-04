@@ -29,7 +29,7 @@
     </div>
     <div class="evaluation__fourth__Fourth">
       <div class="evaluation__fourth" v-show="tobeShow">
-        <div v-if="tobeData.length === 0">
+        <div v-if="tobeData.length === 0" class="tobe__comment__none">
           没有需要待评价的内容
         </div>
         <div v-else-if="tobeData.length > 0">
@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="evaluation__fourth" v-show="alreadyShow">
-        <div v-if="alreadyData.length === 0">
+        <div v-if="alreadyData.length === 0" class="tobe__comment__none">
           没有已评价的内容
         </div>
         <div v-else-if="alreadyData.length > 0">
@@ -137,8 +137,10 @@ export default {
     }
   },
   mounted() {
-    this.getAlreadyEva();
-    this.getTobeEva();
+    if (this.$store.state.user) {
+      this.getAlreadyEva();
+      this.getTobeEva();
+    }
   },
   created() {},
   filters: {},
@@ -237,4 +239,8 @@ export default {
   height: 10vw;
   margin-top: 50%;
 }
+  .tobe__comment__none {
+    font-size: 30px;
+    text-align: center;
+  }
 </style>

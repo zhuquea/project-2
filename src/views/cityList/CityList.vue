@@ -20,6 +20,7 @@
         ></van-field>
       </van-cell-group>
     </div>
+    <br><br><br><br><br><br>
     <CityListData
       v-if="showCityListData === true"
       :CityListData2="CityListData2"
@@ -241,6 +242,6 @@ export default {
   margin-left: 20px;
 }
   .city__list__fifth {
-    padding-top: 480px;
+    padding-top: 270px;
   }
 </style>
