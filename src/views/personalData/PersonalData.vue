@@ -41,7 +41,8 @@
       <div class="fifth__right">
         <van-field
           v-model="userData.nickname"
-          :placeholder="userData.nickname"></van-field>
+          :placeholder="userData.nickname"
+        ></van-field>
       </div>
     </div>
     <div class="personal__fifth">
@@ -52,14 +53,16 @@
         <van-field
           v-model="userData.gender"
           :placeholder="userData.gender"
-          @click="switch__showGender"></van-field>
+          @click="switch__showGender"
+        ></van-field>
         <van-action-sheet v-model="showGender">
           <van-picker
             show-toolbar
             title="性别"
             :columns="columns"
             @confirm="onConfirm"
-            @cancel="onCancel"></van-picker>
+            @cancel="onCancel"
+          ></van-picker>
         </van-action-sheet>
       </div>
     </div>
@@ -84,7 +87,8 @@
           type="date"
           :min-date="minDate"
           @confirm="onConfirm1"
-          @cancel="onCancel1"></van-datetime-picker>
+          @cancel="onCancel1"
+        ></van-datetime-picker>
       </van-popup>
     </div>
     <div class="personal__seventh">
@@ -142,9 +146,12 @@ export default {
       this.showGender = false;
     },
     onConfirm1(value) {
-      this.$store.state.user.year = value.getFullYear();
-      this.$store.state.user.month = value.getMonth();
-      this.$store.state.user.day = value.getDay();
+      this.$store.state.user.year = this.$moment(value).year();
+      this.$store.state.user.month = this.$moment(value).month() + 1;
+      this.$store.state.user.day = this.$moment(value).date();
+      // this.$store.state.user.year = value.getFullYear();
+      // this.$store.state.user.month = value.getMonth() + 1;
+      // this.$store.state.user.day = value.getDate()
       this.showYear = false;
       console.log(this.showYear);
     },

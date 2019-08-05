@@ -177,6 +177,8 @@ export default {
           if (this.classDataAll.indexOf(item) === 0) {
             this.classDataItem = item;
             this.classDataArr = this.classDataItem.bxMallSubDto;
+            this.$store.state.classDataArr = this.classDataItem.bxMallSubDto
+            this.$store.state.tabnumobj = 0
           }
         });
         this.tabnumobj = 0;

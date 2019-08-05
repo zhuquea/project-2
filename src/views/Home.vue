@@ -307,18 +307,29 @@ export default {
       this.hiddenHome = false;
       if (localStorage.getItem("searchHistory")) {
         this.searchHistoryData.push(this.value);
-      }
-      if (this.searchHistoryData.length > 0) {
         localStorage.setItem(
-          "searchHistory",
-          JSON.stringify(this.searchHistoryData)
+                "searchHistory",
+                JSON.stringify(this.searchHistoryData)
         );
       }
+      // if (this.searchHistoryData.length > 0) {
+      //   localStorage.setItem(
+      //     "searchHistory",
+      //     JSON.stringify(this.searchHistoryData)
+      //   );
+      // }
     },
     deleteReturn() {},
     onSearch() {},
     onSearch2() {
       this.hiddenHome = false;
+      if (localStorage.getItem("searchHistory")) {
+        this.searchHistoryData.push(this.value);
+        localStorage.setItem(
+                "searchHistory",
+                JSON.stringify(this.searchHistoryData)
+        );
+      }
     },
     getHistory(data) {
       this.value = data;
@@ -425,6 +436,7 @@ export default {
       this.searchHistoryData = JSON.parse(
         localStorage.getItem("searchHistory")
       );
+      console.log(this.searchHistoryData);
     }
     //定位
     if (this.$store.state.isLocation === false) {

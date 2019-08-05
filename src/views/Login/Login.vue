@@ -76,6 +76,7 @@
 </template>
 
 <script>
+  import { Toast } from "vant";
 import _ from "lodash";
 export default {
   name: "Login",
@@ -91,7 +92,8 @@ export default {
       verifictioncode: "",
       src: "",
       details_login: "",
-      details_id: ""
+      details_id: "",
+      searchHistoryObj: []//当登陆或者注册成功后将localstorage中searchHistory的搜索历史记录清空
     };
   },
   methods: {
@@ -119,17 +121,35 @@ export default {
             console.log(response);
           }
           if (response.code === -1) {
-            this.$notify("请输入完整信息或者用户名密码错误");
+            Toast({
+              message: "请输入完整信息或者用户名密码错误",
+              type: "fail",
+              duration: 2000
+            });
+            // this.$notify("请输入完整信息或者用户名密码错误");
           } else if (response.code === -2) {
-            this.$notify("验证码错误");
+            Toast({
+              message: "验证码错误",
+              type: "fail",
+              duration: 2000
+            });
+            // this.$notify("验证码错误");
             this.getcode();
           } else if (response.code === 200) {
-            this.$notify({
+            Toast({
               message: "恭喜你，登录成功",
-              duration: 3000,
-              background: "#1989fa"
+              type: "success",
+              duration: 2000
             });
+            // this.$notify({
+            //   message: "恭喜你，登录成功",
+            //   duration: 3000,
+            //   background: "#1989fa"
+            // });
             localStorage.setItem("user", JSON.stringify(response.userInfo));
+            localStorage.removeItem("recentBrowsingData");
+            localStorage.setItem("searchHistory",JSON.stringify(this.searchHistoryObj))
+            // localStorage.removeItem("searchHistory");
             this.$store.state.user = response.userInfo;
             if (this.details_login === true) {
               this.$router.push({name:"details" , query: {idLogin : this.details_id}})
@@ -159,21 +179,39 @@ export default {
             console.log(response);
           }
           if (response.code === -1) {
-            this.$notify("请输入完整信息或用户名已存在");
-          } else if (response.code === -2) {
-            this.$notify({
-              message: "验证码错误",
-              duration: 3000,
-              background: "orange"
+            Toast({
+              message: "请输入完整信息或者用户名密码错误",
+              type: "fail",
+              duration: 2000
             });
+            // this.$notify("请输入完整信息或用户名已存在");
+          } else if (response.code === -2) {
+            Toast({
+              message: "验证码错误",
+              type: "fail",
+              duration: 2000
+            });
+            // this.$notify({
+            //   message: "验证码错误",
+            //   duration: 3000,
+            //   background: "orange"
+            // });
             this.getcode();
           } else if (response.code === 200) {
-            this.$notify({
+            Toast({
               message: "恭喜你，注册成功",
-              duration: 3000,
-              background: "#1989fa"
+              type: "success",
+              duration: 2000
             });
+            // this.$notify({
+            //   message: "恭喜你，注册成功",
+            //   duration: 3000,
+            //   background: "#1989fa"
+            // });
             localStorage.setItem("user", JSON.stringify(response.userInfo));
+            localStorage.removeItem("recentBrowsingData");
+            localStorage.setItem("searchHistory",JSON.stringify(this.searchHistoryObj))
+            // localStorage.removeItem("searchHistory");
             this.$store.state.user = response.userInfo;
             if (this.details_login === true) {
               this.$router.push({name:"details" , query: {idLogin : this.details_id}})

@@ -131,9 +131,13 @@ export default {
           .then(response => {
             if (response) {
               Toast({
-                message: "结算成功，一共" + this.total / 100 + "元",
+                message: "结算成功，一共" + this.total_1 + "元",
                 type: "success",
                 duration: 2000
+              });
+              this.$router.push({
+                name: "details",
+                query: { idOrder: this.idOrder }
               });
               this.$store.state.shopping_Cart = [];
               console.log(response);
@@ -250,6 +254,10 @@ export default {
   computed: {
     total() {
       return this.valueObj * this.orderData.present_price * 100;
+    },
+    total_1() {
+      let NumObj = this.valueObj * this.orderData.present_price
+      return NumObj.toFixed(2)
     },
     total2() {
       let summation = 0;

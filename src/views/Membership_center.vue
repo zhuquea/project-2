@@ -97,7 +97,8 @@ export default {
     return {
       active: 0,
       alreadyData: [],
-      tobeData: []
+      tobeData: [],
+      searchHistory: []//当点击退出登录或者请登录时，用来清空localstorage中searchHistory的搜索记录
     };
   },
   methods: {
@@ -108,7 +109,11 @@ export default {
           if (response) {
             localStorage.removeItem("user");
             localStorage.removeItem("recentBrowsingData");
-            localStorage.removeItem("searchHistory");
+            localStorage.setItem(
+              "searchHistory",
+              JSON.stringify(this.searchHistory)
+            );
+            // localStorage.removeItem("searchHistory");
             this.$store.state.user = "";
             this.$store.state.userData = "";
             this.$store.state.details_login = true;
@@ -127,7 +132,8 @@ export default {
     login__Out1() {
       localStorage.removeItem("user");
       localStorage.removeItem("recentBrowsingData");
-      localStorage.removeItem("searchHistory");
+      localStorage.setItem("searchHistory", JSON.stringify(this.searchHistory));
+      // localStorage.removeItem("searchHistory");
       this.$store.state.isLocation = false;
       this.$router.push({ name: "login" });
       this.$store.state.showOut = !this.$store.state.showOut;

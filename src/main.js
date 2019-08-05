@@ -13,7 +13,7 @@ import imgs from "./picture/senlin.jpg"
 
 Vue.use(Vant);
 Vue.prototype.$axios = http;
-Vue.prototype.$moment = moment();
+Vue.prototype.$moment = moment;
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   loading: imgs,
